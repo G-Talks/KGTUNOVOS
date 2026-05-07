@@ -3,47 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KGTÜ Merkez Bina Navigasyonu</title>
+    <title>KGTÜ Premium İç Mekan Navigasyon: Merkez Bina</title>
     <style>
-        /* Premium Koyu Tema ve Glassmorphism Temeli */
+        /* KGTÜ Logo Renk Paletine Uygun Premium Tema (Mavi, Yeşil, Turuncu) */
         :root {
-            --gold: #D4AF37;
-            --gold-light: #F3E5AB;
-            --dark-bg: #121212;
-            --glass-bg: rgba(20, 25, 30, 0.85);
-            --glass-border: rgba(212, 175, 55, 0.4);
-            --text-main: #E0E0E0;
+            --depth-blue: #0f172a; /* Derin Gece Mavisi Arka Plan */
+            --glass-blue: rgba(17, 24, 39, 0.7); /* Saydam Derin Mavi Paneller */
+            --glass-border: rgba(34, 197, 94, 0.2); /* Yeşil Aksanlı Glassmorphism Sınırı */
+            
+            --vibrant-green: #22c55e; /* Canlı Yeşil - Rota Çizgileri, Seçili Düğümler, Başlıklar */
+            --vibrant-orange: #f97316; /* Canlı Turuncu - Hedef Noktaları, Kafeler */
+            
+            --text-gold: #fde047; /* Hafif Altın Metin Aksanı */
+            --text-main: #e2e8f0; /* Açık Gümüş Metin */
         }
 
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             margin: 0; 
             padding: 20px; 
-            background: linear-gradient(135deg, #141e30, #243b55); 
+            background: linear-gradient(135deg, #0f172a, #111827); /* Derin Gece Mavisi Gradiyenti */
             color: var(--text-main);
             min-height: 100vh;
         }
 
         .container { 
-            max-width: 1000px; 
+            max-width: 1100px; 
             margin: 0 auto; 
-            background: var(--glass-bg);
+            background: var(--glass-blue);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
             border: 1px solid var(--glass-border);
             padding: 30px; 
             border-radius: 20px; 
-            box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.6); 
+            box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.7); 
         }
 
         h1 { 
             text-align: center; 
-            color: var(--gold); 
-            font-weight: 400;
+            color: var(--vibrant-green); 
+            font-weight: 300;
             letter-spacing: 3px;
             margin-bottom: 30px;
             text-transform: uppercase;
         }
+
+        h1 b { color: var(--vibrant-orange); }
 
         .controls { 
             display: flex; 
@@ -57,7 +62,7 @@
         select { 
             padding: 12px 20px; 
             border-radius: 10px; 
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(0, 0, 0, 0.7);
             border: 1px solid var(--glass-border); 
             color: white;
             font-size: 15px; 
@@ -66,14 +71,25 @@
         }
 
         select:focus {
-            border-color: var(--gold);
-            box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+            border-color: var(--vibrant-green);
+            box-shadow: 0 0 10px rgba(34, 197, 94, 0.3);
+        }
+
+        .gps-btn {
+            background: linear-gradient(45deg, #111827, #0f172a); 
+            color: var(--vibrant-orange);
+            border: 1px solid var(--vibrant-orange);
+            box-shadow: 0 2px 10px rgba(249, 115, 22, 0.3);
+        }
+
+        .gps-btn:hover {
+            box-shadow: 0 4px 15px rgba(249, 115, 22, 0.5);
         }
 
         button { 
             padding: 12px 30px; 
             border-radius: 10px; 
-            background: linear-gradient(45deg, #B8860B, #D4AF37); 
+            background: linear-gradient(45deg, #22c55e, #16a34a); 
             color: #121212; 
             border: none; 
             cursor: pointer; 
@@ -81,74 +97,97 @@
             font-size: 15px;
             letter-spacing: 1px;
             transition: 0.3s; 
-            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4);
         }
 
         button:hover { 
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.6);
+            box-shadow: 0 6px 20px rgba(34, 197, 94, 0.6);
         }
         
-        /* Harita Alanı */
+        /* Harita Alanı - Yuvarlak (C-Şekli) Taslağı Yansıtmalı */
         #map-container { 
             position: relative; 
             width: 100%; 
             height: 600px; 
-            background-color: rgba(0,0,0,0.8); 
+            background-color: rgba(0,0,0,0.85); 
             border: 1px solid var(--glass-border); 
             border-radius: 15px; 
             overflow: hidden; 
             margin-bottom: 25px; 
         }
         
+        /* Arka plan taslağı silindi, düğümler bu yuvarlak dairesel yörünge/C şekline göre dağıtıldı */
         #map-bg { 
             width: 100%; 
             height: 100%; 
             position: absolute; 
             top: 0; 
             left: 0; 
-            background: url('https://via.placeholder.com/1000x600/1a1a1a/D4AF37?text=MERKEZ+B%C4%B0NA+|+Sol:+Alt+Kat+|+Orta:+Zemin+|+Sa%C4%9F:+1.+Kat') no-repeat center center; 
-            background-size: cover; 
-            opacity: 0.5; 
+            opacity: 0.2; 
+            /* Yörünge şeklini anımsatan çok silik bir geometrik desen */
+            background-image: radial-gradient(var(--glass-border) 1px, transparent 1px);
+            background-size: 30px 30px;
         }
         
+        /* Çizgiler için SVG */
         #routes { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
         
+        /* Noktalar (Düğümler) */
         .node { 
             position: absolute; 
             width: 14px; 
             height: 14px; 
-            background-color: var(--gold); 
             border-radius: 50%; 
             transform: translate(-50%, -50%); 
             cursor: pointer; 
-            border: 2px solid #121212; 
-            box-shadow: 0 0 10px var(--gold); 
+            border: 2px solid var(--depth-blue); 
             transition: all 0.3s ease;
+            opacity: 0.8;
+        }
+
+        /* Başlangıç/Normal Düğüm: Yeşil */
+        .node:not(.vibrant) {
+            background-color: var(--vibrant-green); 
+            box-shadow: 0 0 10px var(--vibrant-green); 
+        }
+
+        /* Hedef/Canlı Düğüm: Turuncu (Kafeler, Hedef Seçili) */
+        .node.vibrant {
+            background-color: var(--vibrant-orange); 
+            box-shadow: 0 0 12px var(--vibrant-orange); 
+            width: 16px;
+            height: 16px;
         }
 
         .node:hover {
             transform: translate(-50%, -50%) scale(1.6);
+            opacity: 1;
         }
 
         .node-label { 
             position: absolute; 
             font-size: 11px; 
-            font-weight: bold; 
+            font-weight: 600; 
             color: #121212;
-            background: var(--gold-light); 
+            background: var(--vibrant-green); 
             padding: 3px 8px; 
             border-radius: 4px; 
             transform: translate(-50%, 15px); 
             pointer-events: none; 
-            white-space: nowrap;
             box-shadow: 0 2px 5px rgba(0,0,0,0.6);
+            white-space: nowrap;
+        }
+
+        .node.vibrant + .node-label {
+            background: var(--vibrant-orange);
         }
         
+        /* Yol Tarifi Paneli */
         #directions { 
             padding: 20px; 
             background: rgba(0, 0, 0, 0.4); 
-            border-left: 4px solid var(--gold); 
+            border-left: 4px solid var(--vibrant-green); 
             border-radius: 0 10px 10px 0; 
             font-size: 15px; 
             line-height: 1.6; 
@@ -157,17 +196,23 @@
 
         ol { margin: 0; padding-left: 20px; }
         li { margin-bottom: 8px; }
-        b { color: var(--gold); }
+        b { color: var(--vibrant-green); }
+        li b { color: var(--vibrant-orange); } /* Talimattaki Hedef Turuncu */
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>KGTÜ Merkez Bina</h1>
+    <h1>KGTÜ <b>Navigasyon</b>: Merkez Bina</h1>
     
     <div class="controls">
-        <select id="start"></select>
-        <select id="end"></select>
+        <select id="start">
+            <option value="" disabled selected>Neredesin?</option>
+        </select>
+        <button class="gps-btn" onclick="getKonumFromKonum()">(?) Konumdan Al</button>
+        <select id="end">
+            <option value="" disabled selected>Nereye Gitmek İstiyorsun?</option>
+        </select>
         <button onclick="calculateRoute()">ROTAYI ÇİZ</button>
     </div>
 
@@ -177,80 +222,151 @@
         <div id="nodes-container"></div>
     </div>
 
-    <div id="directions">Navigasyonu başlatmak için başlangıç ve hedef noktalarını seçin.</div>
+    <div id="directions">Navigasyon talimatları ve rota bilgisi için başlangıç ve hedef seçin.</div>
 </div>
 
 <script>
-    // 1. KGTÜ MERKEZ BİNA BİREBİR LOKASYONLARI (Sanal Tur Verisi)
+    // 1. KGTÜ MERKEZ BİNA BİREBİR LOKASYONLARI (Yuvarlak/C-Şekline Uygun Dağıtıldı)
     const locations = {
-        // --- DIŞ MEKAN VE ZEMİN KAT (Orta Bölge) ---
-        "MB_YuruyusYolu": { x: 500, y: 530, name: "Yürüyüş Yolu" },
-        "MB_Kamelyalar": { x: 650, y: 530, name: "Kamelyalar" },
-        "MB_AnaGiris": { x: 500, y: 430, name: "Merkez Bina Ana Giriş" },
-        "MB_Fuaye": { x: 500, y: 320, name: "Fuaye Alanı" },
-        "MB_Asansor": { x: 500, y: 200, name: "Asansör / Merdiven" }, // Katları bağlayan düğüm
+        // --- DIŞ MEKAN VE ZEMİN KAT ---
+        "MB_GirisA": { x: 500, y: 550, name: "Zemin Kat Ana Giriş (A)" },
+        "MB_GirisB": { x: 300, y: 480, name: "B Girişi" },
+        "MB_GirisC": { x: 700, y: 480, name: "C Girişi" },
+        "MB_Fuaye": { x: 500, y: 450, name: "Ana Fuaye Alanı" },
+        "MB_AsansorZemin": { x: 500, y: 350, name: "Zemin Asansör/Merdiven" }, // Kat geçiş düğümü
 
-        // --- ALT KAT (Sol Bölge) ---
-        "AK_Koridor": { x: 300, y: 200, name: "Alt Kat Koridoru" },
-        "AK_KonferansGiris": { x: 300, y: 300, name: "Konferans Salonları Girişi" },
-        "AK_Konf1": { x: 150, y: 260, name: "Konferans Salonu 1" },
-        "AK_Konf2": { x: 150, y: 340, name: "Konferans Salonu 2" },
-        "AK_BuyukKonf": { x: 150, y: 140, name: "Konferans Salonu (Sahne)" },
-        "AK_Fitness": { x: 300, y: 100, name: "Fitness Salonu" },
+        // --- 1. KAT (Sağ Bölge Dairesel Akış) ---
+        "K1_MerkezAsansor": { x: 500, y: 250, name: "1. Kat Asansör/Merdiven" },
+        "K1_KoridorA": { x: 700, y: 200, name: "1. Kat A Koridoru" },
+        "K1_Lab_MBG": { x: 850, y: 150, name: "Moleküler Biyoloji Lab 1" },
+        "K1_KafeGiris": { x: 600, y: 100, name: "1. Kat Kafe Yolu" },
+        "K1_NeoKafe": { x: 500, y: 50, name: "Neo Cafe (Orta Bağlantı)", vibrant: true }, // 1. Kat Ortadaki Canlı Nokta
 
-        // --- 1. KAT (Sağ Bölge) ---
-        "K1_Merkez": { x: 700, y: 200, name: "Merkez Bina 1. Kat" },
-        "K1_Kafe": { x: 700, y: 100, name: "1. Kat - Kafe Girişi" },
-        "K1_Koridor": { x: 850, y: 200, name: "Laboratuvar Koridoru" },
-        "K1_MBGLab1": { x: 850, y: 300, name: "Moleküler Biyoloji Lab 1" },
-        "K1_MBGLab2": { x: 850, y: 380, name: "Moleküler Biyoloji Lab 2" },
-        "K1_MBGLab3": { x: 850, y: 460, name: "Moleküler Biyoloji Lab 3" }
+        // --- 2. KAT (Sol Bölge Dairesel Akış) ---
+        "K2_MerkezAsansor": { x: 500, y: 150, name: "2. Kat Asansör/Merdiven" },
+        "K2_KoridorB": { x: 300, y: 200, name: "2. Kat B Koridoru" },
+        "K2_Lab_GD": { x: 150, y: 260, name: "Gıda Kimyası Laboratuvarı" },
+        "K2_MutfakGiris": { x: 400, y: 100, name: "2. Kat Mutfak Yolu" },
+        "K2_NeoMutfak": { x: 500, y: 50, name: "Neo Mutfak (Orta Bağlantı)", vibrant: true } // 2. Kat Ortadaki Canlı Nokta
     };
 
     // 2. BİNA İÇİ BAĞLANTILAR VE YÜRÜYÜŞ MESAFELERİ
     const graph = {
-        // Zemin Kat & Dışarısı
-        "MB_YuruyusYolu": { "MB_AnaGiris": 20, "MB_Kamelyalar": 15 },
-        "MB_Kamelyalar": { "MB_YuruyusYolu": 15 },
-        "MB_AnaGiris": { "MB_YuruyusYolu": 20, "MB_Fuaye": 10 },
-        "MB_Fuaye": { "MB_AnaGiris": 10, "MB_Asansor": 15 },
-        "MB_Asansor": { "MB_Fuaye": 15, "AK_Koridor": 10, "K1_Merkez": 10 }, // Asansör ile Alt Kata veya 1. Kata geçiş
-
-        // Alt Kat
-        "AK_Koridor": { "MB_Asansor": 10, "AK_KonferansGiris": 10, "AK_BuyukKonf": 15, "AK_Fitness": 15 },
-        "AK_KonferansGiris": { "AK_Koridor": 10, "AK_Konf1": 15, "AK_Konf2": 15 },
-        "AK_Konf1": { "AK_KonferansGiris": 15 },
-        "AK_Konf2": { "AK_KonferansGiris": 15 },
-        "AK_BuyukKonf": { "AK_Koridor": 15 },
-        "AK_Fitness": { "AK_Koridor": 15 },
+        // Zemin Kat
+        "MB_GirisA": { "MB_Fuaye": 10 },
+        "MB_GirisB": { "MB_Fuaye": 15 },
+        "MB_GirisC": { "MB_Fuaye": 15 },
+        "MB_Fuaye": { "MB_GirisA": 10, "MB_GirisB": 15, "MB_GirisC": 15, "MB_AsansorZemin": 20 },
+        "MB_AsansorZemin": { "MB_Fuaye": 20, "K1_MerkezAsansor": 15 }, // Zemin asansörü -> 1. Kat asansörü
 
         // 1. Kat
-        "K1_Merkez": { "MB_Asansor": 10, "K1_Kafe": 15, "K1_Koridor": 15 },
-        "K1_Kafe": { "K1_Merkez": 15 },
-        "K1_Koridor": { "K1_Merkez": 15, "K1_MBGLab1": 15, "K1_MBGLab2": 25, "K1_MBGLab3": 35 },
-        "K1_MBGLab1": { "K1_Koridor": 15 },
-        "K1_MBGLab2": { "K1_Koridor": 25 },
-        "K1_MBGLab3": { "K1_Koridor": 35 }
+        "K1_MerkezAsansor": { "MB_AsansorZemin": 15, "K1_KoridorA": 15, "K1_KafeGiris": 20, "K2_MerkezAsansor": 15 }, // 1. asansör -> 2. Kat asansörü
+        "K1_KoridorA": { "K1_MerkezAsansor": 15, "K1_Lab_MBG": 20 },
+        "K1_Lab_MBG": { "K1_KoridorA": 20 },
+        "K1_KafeGiris": { "K1_MerkezAsansor": 20, "K1_NeoKafe": 15 },
+        "K1_NeoKafe": { "K1_KafeGiris": 15 },
+
+        // 2. Kat
+        "K2_MerkezAsansor": { "K1_MerkezAsansor": 15, "K2_KoridorB": 15, "K2_MutfakGiris": 20 },
+        "K2_KoridorB": { "K2_MerkezAsansor": 15, "K2_Lab_GD": 20 },
+        "K2_Lab_GD": { "K2_KoridorB": 20 },
+        "K2_MutfakGiris": { "K2_MerkezAsansor": 20, "K2_NeoMutfak": 15 },
+        "K2_NeoMutfak": { "K2_MutfakGiris": 15 }
     };
 
+    // 3. GPS SİMÜLASYONU REFERANS KOORDİNATLARI (Teknik olarak dürüstçe karşılanmalı: Bina Dış Mekan Referansı)
+    // Bu, GPS ile alınacak dış mekan koordinatlarını binada varsaymak için referans noktasıdır.
+    // Gerçek bir iç mekan takibi (odadan odaya) sadece HTML5 GPS ile yapılamaz, donanım gerektirir.
+    // Bu kod, GPS izni alındığında binada olup olmadığınızı ve en yakın girişi referans alarak simülasyon yapar.
+    const KGTU_REFERANS_GIRIS_KOORD = { lat: 37.8920, lng: 32.4850 }; // KGTÜ Merkez Bina Dış Mekan Referans Koordinatları
+    const BINA_MESAFE_HATA_PAYI = 150; // Binaya "buradayım" varsaymak için maksimum mesafe (metre)
+
     window.onload = function() {
+        populateDropdowns();
+        drawNodes();
+    };
+
+    function populateDropdowns() {
         const startSelect = document.getElementById('start');
         const endSelect = document.getElementById('end');
-        const nodesContainer = document.getElementById('nodes-container');
-
-        startSelect.innerHTML = `<option value="" disabled selected>Şu An Neredesin?</option>`;
-        endSelect.innerHTML = `<option value="" disabled selected>Nereye Gitmek İstiyorsun?</option>`;
-
         for (const [id, data] of Object.entries(locations)) {
             startSelect.innerHTML += `<option value="${id}">${data.name}</option>`;
             endSelect.innerHTML += `<option value="${id}">${data.name}</option>`;
+        }
+    }
 
+    function drawNodes() {
+        const nodesContainer = document.getElementById('nodes-container');
+        for (const [id, data] of Object.entries(locations)) {
+            const nodeClass = data.vibrant ? 'node vibrant' : 'node';
             nodesContainer.innerHTML += `
-                <div class="node" style="left: ${data.x}px; top: ${data.y}px;" title="${data.name}"></div>
+                <div class="${nodeClass}" style="left: ${data.x}px; top: ${data.y}px;" title="${data.name}"></div>
                 <div class="node-label" style="left: ${data.x}px; top: ${data.y}px;">${data.name}</div>
             `;
         }
-    };
+    }
+
+    // --- FONKSİYONEL GPS SIMÜLASYONU KODU ---
+    // Bu fonksiyon, "konum izni iste konum afoğru götürsün" isteğini teknik sınırlara göre en dürüstçe simüle eder.
+    // Dış mekan GPS'ini referans mesafe ile birleştirip "binadasınız" simülasyonu yapar.
+    function getKonumFromKonum() {
+        const startSelect = document.getElementById('start');
+        const directionsPanel = document.getElementById('directions');
+
+        directionsPanel.innerHTML = "Konumunuz alınıyor ve binayla karşılaştırılıyor. Lütfen bekleyin...";
+        directionsPanel.style.color = var(--text-gold);
+
+        if (!navigator.geolocation) {
+            alert("Maalesef, tarayıcınız GPS konum servislerini desteklemiyor.");
+            directionsPanel.innerHTML = "Navigasyon talimatları ve rota bilgisi için başlangıç ve hedef seçin.";
+            directionsPanel.style.color = var(--text-main);
+            return;
+        }
+
+        navigator.geolocation.getCurrentPosition(positionSuccess, positionError);
+
+        function positionSuccess(position) {
+            const userLat = position.coords.latitude;
+            const userLng = position.coords.longitude;
+
+            // Haversine formülü ile mesafe hesaplama (GPS koordinatları arasındaki metre mesafesi)
+            const distanceMetres = haversineDistance(userLat, userLng, KGTU_REFERANS_GIRIS_KOORD.lat, KGTU_REFERANS_GIRIS_KOORD.lng);
+
+            if (distanceMetres <= BINA_MESAFE_HATA_PAYI) {
+                // Binadayız!
+                startSelect.value = "MB_GirisA"; // Varsayılan en yakın girişi seç (Gerçek takibe simülasyon)
+                directionsPanel.innerHTML = `Konumunuz binada doğrulandı (${distanceMetres.toFixed(1)}m yakın). <br> Başlangıç noktanız otomatik olarak '<b>${locations["MB_GirisA"].name}</b>' seçildi. Hedefi seçip rota çizebilirsiniz.`;
+                directionsPanel.style.color = var(--vibrant-green);
+                // Ufak bir gecikmeyle normal metin rengine döndür
+                setTimeout(() => directionsPanel.style.color = var(--text-main), 3000);
+            } else {
+                // Binada değiliz veya çok uzağız
+                alert(`Konumunuz KGTÜ Merkez Bina'da doğrulanmadı. (Mesafe: ${distanceMetres.toFixed(1)}m). <br> Lütfen binadayken 'Konumdan Al' butonunu kullanın veya başlangıç noktasını manuel seçin.`);
+                directionsPanel.innerHTML = "Navigasyon talimatları ve rota bilgisi için başlangıç ve hedef seçin.";
+                directionsPanel.style.color = var(--text-main);
+            }
+        }
+
+        function positionError(error) {
+            alert(`GPS konum izni alınamadı veya bir hata oluştu. Lütfen manuel başlangıç seçin. <br> Hata: ${error.message}`);
+            directionsPanel.innerHTML = "Navigasyon talimatları ve rota bilgisi için başlangıç ve hedef seçin.";
+            directionsPanel.style.color = var(--text-main);
+        }
+    }
+
+    // Mesafe Hesaplama (Haversine Formülü)
+    function haversineDistance(lat1, lon1, lat2, lon2) {
+        const R = 6371; // Dünya yarıçapı (km)
+        const dLat = (lat2 - lat1) * Math.PI / 180;
+        const dLon = (lon2 - lon1) * Math.PI / 180;
+        const a = 
+            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c * 1000; // Sonuç Metre
+    }
+    // --- GPS SIMÜLASYONU KODU SONU ---
+
 
     function dijkstra(graph, startNode, endNode) {
         let distances = {};
@@ -298,7 +414,7 @@
         const end = document.getElementById('end').value;
 
         if (!start || !end) {
-            document.getElementById('directions').innerHTML = "Lütfen önce başlangıç ve bitiş noktalarını seçin.";
+            alert("Lütfen rota oluşturmak için hem başlangıç hem de bitiş noktasını seçin.");
             return;
         }
 
@@ -318,12 +434,13 @@
             const node1 = locations[path[i]];
             const node2 = locations[path[i+1]];
             
+            // Çizgiyi çiz (Yeşil Rota)
             const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
             line.setAttribute("x1", node1.x);
             line.setAttribute("y1", node1.y);
             line.setAttribute("x2", node2.x);
             line.setAttribute("y2", node2.y);
-            line.setAttribute("stroke", "rgba(212, 175, 55, 0.9)"); 
+            line.setAttribute("stroke", "rgba(34, 197, 94, 0.9)"); /* Canlı Yeşil Rota */
             line.setAttribute("stroke-width", "4");
             line.setAttribute("stroke-dasharray", "8,8"); 
             
@@ -336,9 +453,9 @@
 
             svg.appendChild(line);
 
-            // Asansör uyarısı ekleme mantığı
+            // Detaylı metin talimatı
             let actionText = "yönüne ilerleyin.";
-            if (node1.name === "Asansör / Merdiven" && path[i-1] && locations[path[i-1]].name.includes("Fuaye")) {
+            if (node1.name.includes("Asansör") && node2.name.includes("Asansör")) {
                 actionText = "kullanarak kata geçiş yapın.";
             }
 
