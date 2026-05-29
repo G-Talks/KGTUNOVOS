@@ -3,87 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KGTÜ Akıllı Kampüs | Açık Kaynak Sürümü</title>
+    <title>KGTÜ Akıllı Kampüs | Master Edition</title>
     <style>
-        /* --- TEMA AYARLARI --- */
+        /* --- MUHTEŞEM ARAYÜZ & RENK PALETİ --- */
         :root {
-            --bg-color: #020617; 
-            --surface-color: rgba(15, 23, 42, 0.95); 
-            --primary: #10B981; 
-            --secondary: #F97316; 
-            --text-main: #F8FAFC;
-            --text-muted: #94A3B8;
-            --border-color: rgba(255, 255, 255, 0.1);
+            --bg-color: #030712; 
+            --surface-color: rgba(17, 24, 39, 0.95); 
+            --primary: #10B981; /* Neon Yeşil */
+            --secondary: #F97316; /* KGTÜ Turuncu */
+            --coffee: #D97706; /* Neo Coffee Rengi */
+            --kitchen: #EAB308; /* Neo Mutfak Rengi */
+            --text-main: #F3F4F6;
+            --text-muted: #9CA3AF;
+            --border-light: rgba(255, 255, 255, 0.1);
         }
+
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; user-select: none; }
         body { background-color: var(--bg-color); color: var(--text-main); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
+        /* --- HEADER --- */
         header {
-            padding: 15px 25px; background: rgba(2, 6, 23, 0.85); backdrop-filter: blur(15px);
-            border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between;
-            align-items: center; z-index: 100; box-shadow: 0 4px 30px rgba(0,0,0,0.5);
+            padding: 15px 25px; background: rgba(3, 7, 18, 0.9); backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between;
+            align-items: center; z-index: 100; box-shadow: 0 4px 30px rgba(0,0,0,0.8);
         }
-        .brand h1 { font-size: 20px; font-weight: 700; letter-spacing: 1px; }
+        .brand h1 { font-size: 20px; font-weight: 800; letter-spacing: 1.5px; margin:0;}
         .brand h1 span { color: var(--primary); }
+        .status { font-size: 11px; font-weight: bold; color: var(--secondary); background: rgba(249,115,22,0.1); padding: 5px 12px; border-radius: 20px; border: 1px solid rgba(249,115,22,0.3);}
 
-        #map-viewport { flex: 1; position: relative; overflow: hidden; background: radial-gradient(circle at 50% 50%, #0F172A, #020617); }
-        #map-layer { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 1000px; height: 700px; }
+        /* --- HARİTA ALANI --- */
+        #map-viewport { flex: 1; position: relative; overflow: hidden; background: radial-gradient(circle at 50% 50%, #111827, #030712); display: flex; justify-content: center; align-items: center;}
         
-        .blueprint { position: absolute; width: 100%; height: 100%; opacity: 0.35; pointer-events: none; }
+        #map-layer { position: absolute; width: 1000px; height: 800px; transform: scale(0.9); /* Sığması için ufak küçültme */ }
+        
+        .blueprint { position: absolute; width: 100%; height: 100%; opacity: 0.5; pointer-events: none; }
         .routes-svg { position: absolute; width: 100%; height: 100%; pointer-events: none; z-index: 5; }
         
-        /* Nokta (Node) Tasarımları */
-        .node { position: absolute; width: 14px; height: 14px; border-radius: 50%; transform: translate(-50%, -50%); cursor: pointer; border: 2px solid var(--bg-color); z-index: 10; box-shadow: 0 0 5px rgba(0,0,0,0.5);}
-        .node.elevator { background: #E2E8F0; border-radius: 6px; width: 20px; height: 20px; border: 3px solid #3B82F6; box-shadow: 0 0 10px #3B82F6;}
-        .node.entrance { background: #EF4444; width: 18px; height: 18px; }
+        /* NOKTALAR (NODES) */
+        .node { position: absolute; width: 16px; height: 16px; border-radius: 50%; transform: translate(-50%, -50%); cursor: pointer; border: 2px solid var(--bg-color); z-index: 10; transition: 0.2s;}
+        .node:hover { transform: translate(-50%, -50%) scale(1.5); box-shadow: 0 0 15px var(--primary); z-index: 20;}
+        
+        .node.elevator { background: #E2E8F0; border-radius: 8px; width: 22px; height: 22px; border: 3px solid #3B82F6; box-shadow: 0 0 10px rgba(59,130,246,0.5);} /* Beyaz Yuvarlaklar */
+        .node.entrance { background: #EF4444; width: 20px; height: 20px; }
         .node.classroom { background: var(--primary); }
         .node.academic { background: #A855F7; }
-        .node.special { background: var(--secondary); width: 18px; height: 18px;}
+        .node.special { background: var(--secondary); width: 24px; height: 24px; border: 3px solid #000; box-shadow: 0 0 15px var(--secondary);}
+        .node.coffee { background: var(--coffee); width: 24px; height: 24px; border: 3px solid #000; box-shadow: 0 0 15px var(--coffee);}
+        .node.kitchen { background: var(--kitchen); width: 24px; height: 24px; border: 3px solid #000; box-shadow: 0 0 15px var(--kitchen);}
         
         .node-label {
-            position: absolute; background: rgba(2, 6, 23, 0.95); padding: 5px 10px; border-radius: 6px;
-            border: 1px solid var(--border-color); color: var(--text-main); font-size: 11px; font-weight: 600;
-            transform: translate(-50%, 15px); pointer-events: none; white-space: nowrap; z-index: 15;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+            position: absolute; background: rgba(3, 7, 18, 0.95); padding: 6px 12px; border-radius: 8px;
+            border: 1px solid var(--border-light); color: var(--text-main); font-size: 12px; font-weight: 600;
+            transform: translate(-50%, 18px); pointer-events: none; white-space: nowrap; z-index: 15;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
         }
 
         #avatar {
-            position: absolute; width: 32px; height: 32px; background: #FFF; border-radius: 50%;
+            position: absolute; width: 34px; height: 34px; background: #FFF; border-radius: 50%;
             transform: translate(-50%, -50%); display: none; z-index: 50; text-align: center;
-            line-height: 32px; font-size: 18px; box-shadow: 0 0 20px #FFF; transition: left 0.6s linear, top 0.6s linear;
+            line-height: 34px; font-size: 18px; box-shadow: 0 0 20px #FFF; transition: left 0.6s linear, top 0.6s linear;
         }
 
-        .dashboard { background: var(--surface-color); padding: 20px; z-index: 100; display: flex; flex-direction: column; gap: 15px; border-top: 1px solid var(--border-color);}
-        .floor-tabs { display: flex; background: rgba(0,0,0,0.6); border-radius: 10px; padding: 5px; gap: 5px; }
-        .floor-tabs button { flex: 1; padding: 10px; background: transparent; border: none; color: var(--text-muted); font-weight: 600; border-radius: 6px; cursor: pointer; transition: 0.3s;}
-        .floor-tabs button.active { background: var(--primary); color: #000; }
+        /* --- ALT KONTROL PANELİ --- */
+        .dashboard { background: var(--surface-color); padding: 20px 25px; z-index: 100; display: flex; flex-direction: column; gap: 15px; border-top: 1px solid var(--border-light); box-shadow: 0 -10px 40px rgba(0,0,0,0.8);}
+        
+        .floor-tabs { display: flex; background: rgba(0,0,0,0.8); border-radius: 12px; padding: 6px; gap: 6px; border: 1px solid var(--border-light);}
+        .floor-tabs button { flex: 1; padding: 12px; background: transparent; border: none; color: var(--text-muted); font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.3s;}
+        .floor-tabs button.active { background: var(--primary); color: #000; box-shadow: 0 0 15px rgba(16,185,129,0.3);}
 
-        .routing-box { display: flex; gap: 10px; }
-        select { flex: 1; padding: 12px; border-radius: 8px; background: #1E293B; border: 1px solid var(--border-color); color: white; outline: none; }
-        .btn { padding: 12px 20px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; transition: 0.2s;}
+        .routing-box { display: flex; gap: 12px; }
+        select { flex: 1; padding: 14px; border-radius: 10px; background: #1F2937; border: 1px solid var(--border-light); color: white; outline: none; font-size: 14px; font-weight: 500;}
+        select:focus { border-color: var(--primary); }
+        .btn { padding: 14px 25px; border-radius: 10px; border: none; font-weight: bold; font-size: 14px; cursor: pointer; transition: 0.2s; }
         .btn-primary { background: var(--primary); color: #000; }
         .btn-primary:hover { background: #059669; }
         .btn-secondary { background: var(--secondary); color: #000; display: none; }
-        #instructions { max-height: 80px; overflow-y: auto; font-size: 13px; color: var(--text-muted); line-height: 1.6; }
         
+        #instructions { max-height: 80px; overflow-y: auto; font-size: 13px; color: var(--text-muted); line-height: 1.6; padding: 0 10px; border-left: 3px solid var(--primary);}
         ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #4B5563; border-radius: 10px; }
     </style>
 </head>
 <body>
 
     <header>
         <div class="brand"><h1>KGTÜ <span>NAV OS</span></h1></div>
+        <div class="status">SİSTEM OVAL MİMARİDE AKTİF</div>
     </header>
 
     <div id="map-viewport">
         <div id="map-layer">
-            <svg class="blueprint" viewBox="0 0 1000 700">
-                <polygon points="500,100 200,560 800,560" fill="none" stroke="rgba(255, 255, 255, 0.15)" stroke-width="60" stroke-linejoin="round"/>
-                <polygon points="500,260 330,510 670,510" fill="rgba(2, 6, 23, 1)" stroke="rgba(255, 255, 255, 0.1)" stroke-width="30" stroke-linejoin="round"/>
-                <line x1="500" y1="360" x2="430" y2="280" stroke="rgba(255, 255, 255, 0.04)" stroke-width="40" stroke-linecap="round"/>
-                <line x1="500" y1="360" x2="570" y2="280" stroke="rgba(255, 255, 255, 0.04)" stroke-width="40" stroke-linecap="round"/>
-                <line x1="500" y1="360" x2="500" y2="480" stroke="rgba(255, 255, 255, 0.04)" stroke-width="40" stroke-linecap="round"/>
+            <svg class="blueprint" viewBox="0 0 1000 800" preserveAspectRatio="xMidYMid meet">
+                <polygon points="500,150 250,600 750,600" fill="none" stroke="rgba(255, 255, 255, 0.08)" stroke-width="80" stroke-linejoin="round"/>
+                
+                <line x1="500" y1="420" x2="380" y2="370" stroke="rgba(255, 255, 255, 0.05)" stroke-width="40" stroke-linecap="round"/>
+                <line x1="500" y1="420" x2="620" y2="370" stroke="rgba(255, 255, 255, 0.05)" stroke-width="40" stroke-linecap="round"/>
+                <line x1="500" y1="420" x2="500" y2="550" stroke="rgba(255, 255, 255, 0.05)" stroke-width="40" stroke-linecap="round"/>
             </svg>
             <svg id="routes-layer" class="routes-svg"></svg>
             <div id="nodes-layer"></div>
@@ -94,8 +109,8 @@
     <div class="dashboard">
         <div class="floor-tabs" id="floor-tabs">
             <button class="active" data-floor="0">Zemin Kat</button>
-            <button data-floor="1">1. Kat (Derslikler)</button>
-            <button data-floor="2">2. Kat (Derslikler)</button>
+            <button data-floor="1">1. Kat (Neo Coffee)</button>
+            <button data-floor="2">2. Kat (Neo Mutfak)</button>
             <button data-floor="3">3. Kat (Hocalar)</button>
         </div>
 
@@ -103,153 +118,156 @@
             <select id="select-start"></select>
             <select id="select-end"></select>
             <button class="btn btn-primary" id="btn-calc">Rotayı Çiz</button>
-            <button class="btn btn-secondary" id="btn-sim">▶ Simülasyon</button>
+            <button class="btn btn-secondary" id="btn-sim">▶ Yürüt</button>
         </div>
 
-        <div id="instructions">Kampüs haritası oval tasarıma ve iç asansör noktalarına göre optimize edilmiştir. Açık kaynak kodlu versiyondur.</div>
+        <div id="instructions">Merkez kafeler ve beyaz yuvarlak asansör konumları haritaya işlenmiştir. Seçim yapın.</div>
     </div>
 
 <script>
 // ============================================================================
-// 1. VERİTABANI (NODES) - HER ŞEY AÇIK VE MANUEL DÜZENLENEBİLİR
+// 1. VERİTABANI (NOKTALAR) 
 // ============================================================================
 const DB = {
     nodes: {
         // --- ZEMİN KAT ---
-        "Z_GirisKuzey": { x: 500, y: 100, f: 0, name: "Kuzey Giriş", type: "entrance" },
-        "Z_GirisBati":  { x: 200, y: 560, f: 0, name: "Güneybatı Giriş", type: "entrance" },
-        "Z_GirisDogu":  { x: 800, y: 560, f: 0, name: "Güneydoğu Giriş", type: "entrance" },
-        "Z_AsansorA":   { x: 430, y: 280, f: 0, name: "A Blok Asansörü", type: "elevator" },
-        "Z_AsansorB":   { x: 500, y: 480, f: 0, name: "B Blok Asansörü", type: "elevator" },
-        "Z_AsansorC":   { x: 570, y: 280, f: 0, name: "C Blok Asansörü", type: "elevator" },
-        "Z_Amfi1":      { x: 320, y: 420, f: 0, name: "Büyük Amfi 1", type: "classroom" },
-        "Z_Amfi2":      { x: 680, y: 420, f: 0, name: "Büyük Amfi 2", type: "classroom" },
-        "Z_Merkez":     { x: 500, y: 360, f: 0, name: "Merkez Alan / Fuaye", type: "special" },
+        "Z_Merkez":     { x: 500, y: 420, f: 0, name: "Ana Fuaye (Merkez)", type: "special" },
+        "Z_AsansorA":   { x: 380, y: 370, f: 0, name: "A Blok Asansörü", type: "elevator" }, // Sol Beyaz Yuvarlak
+        "Z_AsansorC":   { x: 620, y: 370, f: 0, name: "C Blok Asansörü", type: "elevator" }, // Sağ Beyaz Yuvarlak
+        "Z_AsansorB":   { x: 500, y: 550, f: 0, name: "B Blok Asansörü", type: "elevator" }, // Alt Beyaz Yuvarlak
+        "Z_GirisKuzey": { x: 500, y: 150, f: 0, name: "Kuzey Giriş", type: "entrance" },
+        "Z_GirisBati":  { x: 250, y: 600, f: 0, name: "Güneybatı Giriş", type: "entrance" },
+        "Z_GirisDogu":  { x: 750, y: 600, f: 0, name: "Güneydoğu Giriş", type: "entrance" },
+        "Z_Amfi1":      { x: 300, y: 400, f: 0, name: "Büyük Amfi 1", type: "classroom" },
+        "Z_Amfi2":      { x: 700, y: 400, f: 0, name: "Büyük Amfi 2", type: "classroom" },
 
-        // --- 1. KAT ---
-        "K1_AsansorA":  { x: 430, y: 280, f: 1, name: "A Blok Asansörü", type: "elevator" },
-        "K1_AsansorB":  { x: 500, y: 480, f: 1, name: "B Blok Asansörü", type: "elevator" },
-        "K1_AsansorC":  { x: 570, y: 280, f: 1, name: "C Blok Asansörü", type: "elevator" },
-        "K1_Merkez":    { x: 500, y: 360, f: 1, name: "Merkez Koridor", type: "academic" },
-        "K1_Derslik1":  { x: 320, y: 420, f: 1, name: "Derslik 101-105", type: "classroom" },
-        "K1_Derslik2":  { x: 260, y: 490, f: 1, name: "Derslik 106-110", type: "classroom" },
-        "K1_Lab1":      { x: 380, y: 220, f: 1, name: "MBG Laboratuvarı 1", type: "classroom" },
-        "K1_Derslik3":  { x: 740, y: 490, f: 1, name: "Derslik 111-115", type: "classroom" },
-        "K1_Derslik4":  { x: 680, y: 420, f: 1, name: "Derslik 116-120", type: "classroom" },
-        "K1_Lab2":      { x: 620, y: 220, f: 1, name: "Fen Bilimleri Lab", type: "classroom" },
+        // --- 1. KAT (NEO COFFEE KAT) ---
+        "K1_Merkez":    { x: 500, y: 420, f: 1, name: "NEO COFFEE", type: "coffee" },
+        "K1_AsansorA":  { x: 380, y: 370, f: 1, name: "A Blok Asansörü", type: "elevator" },
+        "K1_AsansorC":  { x: 620, y: 370, f: 1, name: "C Blok Asansörü", type: "elevator" },
+        "K1_AsansorB":  { x: 500, y: 550, f: 1, name: "B Blok Asansörü", type: "elevator" },
+        "K1_Derslik1":  { x: 500, y: 150, f: 1, name: "Derslik 101-105", type: "classroom" },
+        "K1_Derslik2":  { x: 300, y: 400, f: 1, name: "Derslik 106-110", type: "classroom" },
+        "K1_Derslik3":  { x: 700, y: 400, f: 1, name: "Derslik 111-115", type: "classroom" },
+        "K1_Lab1":      { x: 250, y: 600, f: 1, name: "MBG Laboratuvarı", type: "academic" },
+        "K1_Lab2":      { x: 750, y: 600, f: 1, name: "Fen Lab", type: "academic" },
 
-        // --- 2. KAT ---
-        "K2_AsansorA":  { x: 430, y: 280, f: 2, name: "A Blok Asansörü", type: "elevator" },
-        "K2_AsansorB":  { x: 500, y: 480, f: 2, name: "B Blok Asansörü", type: "elevator" },
-        "K2_AsansorC":  { x: 570, y: 280, f: 2, name: "C Blok Asansörü", type: "elevator" },
-        "K2_Merkez":    { x: 500, y: 360, f: 2, name: "Merkez Koridor", type: "academic" },
-        "K2_Derslik1":  { x: 320, y: 420, f: 2, name: "Derslik 201-205", type: "classroom" },
-        "K2_Derslik2":  { x: 260, y: 490, f: 2, name: "Derslik 206-210", type: "classroom" },
-        "K2_Lab1":      { x: 380, y: 220, f: 2, name: "Mühendislik Lab 1", type: "classroom" },
-        "K2_Derslik3":  { x: 740, y: 490, f: 2, name: "Derslik 211-215", type: "classroom" },
-        "K2_Derslik4":  { x: 680, y: 420, f: 2, name: "Derslik 216-220", type: "classroom" },
-        "K2_Lab2":      { x: 620, y: 220, f: 2, name: "Mühendislik Lab 2", type: "classroom" },
+        // --- 2. KAT (NEO MUTFAK KAT) ---
+        "K2_Merkez":    { x: 500, y: 420, f: 2, name: "NEO MUTFAK", type: "kitchen" },
+        "K2_AsansorA":  { x: 380, y: 370, f: 2, name: "A Blok Asansörü", type: "elevator" },
+        "K2_AsansorC":  { x: 620, y: 370, f: 2, name: "C Blok Asansörü", type: "elevator" },
+        "K2_AsansorB":  { x: 500, y: 550, f: 2, name: "B Blok Asansörü", type: "elevator" },
+        "K2_Derslik1":  { x: 500, y: 150, f: 2, name: "Derslik 201-205", type: "classroom" },
+        "K2_Derslik2":  { x: 300, y: 400, f: 2, name: "Derslik 206-210", type: "classroom" },
+        "K2_Derslik3":  { x: 700, y: 400, f: 2, name: "Derslik 211-215", type: "classroom" },
+        "K2_Lab1":      { x: 250, y: 600, f: 2, name: "Bilgisayar Lab", type: "academic" },
+        "K2_Lab2":      { x: 750, y: 600, f: 2, name: "Mimarlık Atölyesi", type: "academic" },
 
-        // --- 3. KAT ---
-        "K3_AsansorA":  { x: 430, y: 280, f: 3, name: "A Blok Asansörü", type: "elevator" },
-        "K3_AsansorB":  { x: 500, y: 480, f: 3, name: "B Blok Asansörü", type: "elevator" },
-        "K3_AsansorC":  { x: 570, y: 280, f: 3, name: "C Blok Asansörü", type: "elevator" },
-        "K3_Merkez":    { x: 500, y: 360, f: 3, name: "Merkez İdari Alan", type: "academic" },
-        "K3_Ofis1":     { x: 320, y: 420, f: 3, name: "A Blok Akademik Ofisler", type: "academic" },
-        "K3_Ofis2":     { x: 380, y: 220, f: 3, name: "B Blok Akademik Ofisler", type: "academic" },
-        "K3_Ofis3":     { x: 680, y: 420, f: 3, name: "C Blok Akademik Ofisler", type: "academic" }
+        // --- 3. KAT (HOCALAR KAT) ---
+        "K3_Merkez":    { x: 500, y: 420, f: 3, name: "Merkez İdari Alan", type: "academic" },
+        "K3_AsansorA":  { x: 380, y: 370, f: 3, name: "A Blok Asansörü", type: "elevator" },
+        "K3_AsansorC":  { x: 620, y: 370, f: 3, name: "C Blok Asansörü", type: "elevator" },
+        "K3_AsansorB":  { x: 500, y: 550, f: 3, name: "B Blok Asansörü", type: "elevator" },
+        "K3_Ofis1":     { x: 500, y: 150, f: 3, name: "Rektörlük", type: "academic" },
+        "K3_Ofis2":     { x: 300, y: 400, f: 3, name: "A Blok Ofisleri", type: "academic" },
+        "K3_Ofis3":     { x: 700, y: 400, f: 3, name: "C Blok Ofisleri", type: "academic" },
+        "K3_Ofis4":     { x: 250, y: 600, f: 3, name: "Dekanlık", type: "academic" },
+        "K3_Ofis5":     { x: 750, y: 600, f: 3, name: "Toplantı Salonu", type: "academic" }
     },
     graph: {}
 };
 
 // ============================================================================
-// 2. BAĞLANTILAR (EDGES) - AÇIK AÇIK SATIR SATIR YAZILMIŞTIR
+// 2. AÇIK KAYNAK BAĞLANTILAR (İSTEDİĞİN GİBİ SATIR SATIR KONTROL ET)
 // ============================================================================
-// Her noktanın bir boş objesini oluştur
-for (let id in DB.nodes) {
-    DB.graph[id] = {};
-}
+for (let id in DB.nodes) { DB.graph[id] = {}; }
 
-// --- DİKEY (ASANSÖR) BAĞLANTILARI ---
-// A Asansörü
+// DİKEY BAĞLANTILAR (ASANSÖRLER)
 DB.graph["Z_AsansorA"]["K1_AsansorA"] = 30; DB.graph["K1_AsansorA"]["Z_AsansorA"] = 30;
 DB.graph["K1_AsansorA"]["K2_AsansorA"] = 30; DB.graph["K2_AsansorA"]["K1_AsansorA"] = 30;
 DB.graph["K2_AsansorA"]["K3_AsansorA"] = 30; DB.graph["K3_AsansorA"]["K2_AsansorA"] = 30;
 
-// B Asansörü
 DB.graph["Z_AsansorB"]["K1_AsansorB"] = 30; DB.graph["K1_AsansorB"]["Z_AsansorB"] = 30;
 DB.graph["K1_AsansorB"]["K2_AsansorB"] = 30; DB.graph["K2_AsansorB"]["K1_AsansorB"] = 30;
 DB.graph["K2_AsansorB"]["K3_AsansorB"] = 30; DB.graph["K3_AsansorB"]["K2_AsansorB"] = 30;
 
-// C Asansörü
 DB.graph["Z_AsansorC"]["K1_AsansorC"] = 30; DB.graph["K1_AsansorC"]["Z_AsansorC"] = 30;
 DB.graph["K1_AsansorC"]["K2_AsansorC"] = 30; DB.graph["K2_AsansorC"]["K1_AsansorC"] = 30;
 DB.graph["K2_AsansorC"]["K3_AsansorC"] = 30; DB.graph["K3_AsansorC"]["K2_AsansorC"] = 30;
 
-
-// --- YATAY BAĞLANTILAR: ZEMİN KAT ---
+// YATAY BAĞLANTILAR - ZEMİN KAT
 DB.graph["Z_Merkez"]["Z_AsansorA"] = 15; DB.graph["Z_AsansorA"]["Z_Merkez"] = 15;
 DB.graph["Z_Merkez"]["Z_AsansorB"] = 15; DB.graph["Z_AsansorB"]["Z_Merkez"] = 15;
 DB.graph["Z_Merkez"]["Z_AsansorC"] = 15; DB.graph["Z_AsansorC"]["Z_Merkez"] = 15;
 
-DB.graph["Z_AsansorA"]["Z_GirisKuzey"] = 20; DB.graph["Z_GirisKuzey"]["Z_AsansorA"] = 20;
-DB.graph["Z_AsansorA"]["Z_Amfi1"] = 25; DB.graph["Z_Amfi1"]["Z_AsansorA"] = 25;
+DB.graph["Z_AsansorA"]["Z_GirisKuzey"] = 25; DB.graph["Z_GirisKuzey"]["Z_AsansorA"] = 25;
+DB.graph["Z_AsansorA"]["Z_Amfi1"] = 15; DB.graph["Z_Amfi1"]["Z_AsansorA"] = 15;
 
-DB.graph["Z_AsansorB"]["Z_GirisBati"] = 20; DB.graph["Z_GirisBati"]["Z_AsansorB"] = 20;
-DB.graph["Z_AsansorB"]["Z_Amfi1"] = 25; DB.graph["Z_Amfi1"]["Z_AsansorB"] = 25;
-DB.graph["Z_AsansorB"]["Z_Amfi2"] = 25; DB.graph["Z_Amfi2"]["Z_AsansorB"] = 25;
+DB.graph["Z_AsansorC"]["Z_GirisKuzey"] = 25; DB.graph["Z_GirisKuzey"]["Z_AsansorC"] = 25;
+DB.graph["Z_AsansorC"]["Z_Amfi2"] = 15; DB.graph["Z_Amfi2"]["Z_AsansorC"] = 15;
 
-DB.graph["Z_AsansorC"]["Z_GirisDogu"] = 20; DB.graph["Z_GirisDogu"]["Z_AsansorC"] = 20;
-DB.graph["Z_AsansorC"]["Z_Amfi2"] = 25; DB.graph["Z_Amfi2"]["Z_AsansorC"] = 25;
+DB.graph["Z_AsansorB"]["Z_GirisBati"] = 25; DB.graph["Z_GirisBati"]["Z_AsansorB"] = 25;
+DB.graph["Z_AsansorB"]["Z_GirisDogu"] = 25; DB.graph["Z_GirisDogu"]["Z_AsansorB"] = 25;
+
+DB.graph["Z_Amfi1"]["Z_GirisBati"] = 20; DB.graph["Z_GirisBati"]["Z_Amfi1"] = 20;
+DB.graph["Z_Amfi2"]["Z_GirisDogu"] = 20; DB.graph["Z_GirisDogu"]["Z_Amfi2"] = 20;
 
 
-// --- YATAY BAĞLANTILAR: 1. KAT ---
+// YATAY BAĞLANTILAR - 1. KAT (NEO COFFEE)
 DB.graph["K1_Merkez"]["K1_AsansorA"] = 15; DB.graph["K1_AsansorA"]["K1_Merkez"] = 15;
 DB.graph["K1_Merkez"]["K1_AsansorB"] = 15; DB.graph["K1_AsansorB"]["K1_Merkez"] = 15;
 DB.graph["K1_Merkez"]["K1_AsansorC"] = 15; DB.graph["K1_AsansorC"]["K1_Merkez"] = 15;
 
-DB.graph["K1_AsansorA"]["K1_Lab1"] = 15; DB.graph["K1_Lab1"]["K1_AsansorA"] = 15;
 DB.graph["K1_AsansorA"]["K1_Derslik1"] = 25; DB.graph["K1_Derslik1"]["K1_AsansorA"] = 25;
+DB.graph["K1_AsansorA"]["K1_Derslik2"] = 15; DB.graph["K1_Derslik2"]["K1_AsansorA"] = 15;
 
-DB.graph["K1_AsansorB"]["K1_Derslik2"] = 15; DB.graph["K1_Derslik2"]["K1_AsansorB"] = 15;
-DB.graph["K1_AsansorB"]["K1_Derslik1"] = 25; DB.graph["K1_Derslik1"]["K1_AsansorB"] = 25;
-DB.graph["K1_AsansorB"]["K1_Derslik3"] = 25; DB.graph["K1_Derslik3"]["K1_AsansorB"] = 25;
+DB.graph["K1_AsansorC"]["K1_Derslik1"] = 25; DB.graph["K1_Derslik1"]["K1_AsansorC"] = 25;
+DB.graph["K1_AsansorC"]["K1_Derslik3"] = 15; DB.graph["K1_Derslik3"]["K1_AsansorC"] = 15;
 
-DB.graph["K1_AsansorC"]["K1_Lab2"] = 15; DB.graph["K1_Lab2"]["K1_AsansorC"] = 15;
-DB.graph["K1_AsansorC"]["K1_Derslik4"] = 25; DB.graph["K1_Derslik4"]["K1_AsansorC"] = 25;
-DB.graph["K1_Derslik4"]["K1_Derslik3"] = 15; DB.graph["K1_Derslik3"]["K1_Derslik4"] = 15;
+DB.graph["K1_AsansorB"]["K1_Lab1"] = 25; DB.graph["K1_Lab1"]["K1_AsansorB"] = 25;
+DB.graph["K1_AsansorB"]["K1_Lab2"] = 25; DB.graph["K1_Lab2"]["K1_AsansorB"] = 25;
+
+DB.graph["K1_Derslik2"]["K1_Lab1"] = 20; DB.graph["K1_Lab1"]["K1_Derslik2"] = 20;
+DB.graph["K1_Derslik3"]["K1_Lab2"] = 20; DB.graph["K1_Lab2"]["K1_Derslik3"] = 20;
 
 
-// --- YATAY BAĞLANTILAR: 2. KAT ---
+// YATAY BAĞLANTILAR - 2. KAT (NEO MUTFAK)
 DB.graph["K2_Merkez"]["K2_AsansorA"] = 15; DB.graph["K2_AsansorA"]["K2_Merkez"] = 15;
 DB.graph["K2_Merkez"]["K2_AsansorB"] = 15; DB.graph["K2_AsansorB"]["K2_Merkez"] = 15;
 DB.graph["K2_Merkez"]["K2_AsansorC"] = 15; DB.graph["K2_AsansorC"]["K2_Merkez"] = 15;
 
-DB.graph["K2_AsansorA"]["K2_Lab1"] = 15; DB.graph["K2_Lab1"]["K2_AsansorA"] = 15;
 DB.graph["K2_AsansorA"]["K2_Derslik1"] = 25; DB.graph["K2_Derslik1"]["K2_AsansorA"] = 25;
+DB.graph["K2_AsansorA"]["K2_Derslik2"] = 15; DB.graph["K2_Derslik2"]["K2_AsansorA"] = 15;
 
-DB.graph["K2_AsansorB"]["K2_Derslik2"] = 15; DB.graph["K2_Derslik2"]["K2_AsansorB"] = 15;
-DB.graph["K2_AsansorB"]["K2_Derslik1"] = 25; DB.graph["K2_Derslik1"]["K2_AsansorB"] = 25;
-DB.graph["K2_AsansorB"]["K2_Derslik3"] = 25; DB.graph["K2_Derslik3"]["K2_AsansorB"] = 25;
+DB.graph["K2_AsansorC"]["K2_Derslik1"] = 25; DB.graph["K2_Derslik1"]["K2_AsansorC"] = 25;
+DB.graph["K2_AsansorC"]["K2_Derslik3"] = 15; DB.graph["K2_Derslik3"]["K2_AsansorC"] = 15;
 
-DB.graph["K2_AsansorC"]["K2_Lab2"] = 15; DB.graph["K2_Lab2"]["K2_AsansorC"] = 15;
-DB.graph["K2_AsansorC"]["K2_Derslik4"] = 25; DB.graph["K2_Derslik4"]["K2_AsansorC"] = 25;
-DB.graph["K2_Derslik4"]["K2_Derslik3"] = 15; DB.graph["K2_Derslik3"]["K2_Derslik4"] = 15;
+DB.graph["K2_AsansorB"]["K2_Lab1"] = 25; DB.graph["K2_Lab1"]["K2_AsansorB"] = 25;
+DB.graph["K2_AsansorB"]["K2_Lab2"] = 25; DB.graph["K2_Lab2"]["K2_AsansorB"] = 25;
+
+DB.graph["K2_Derslik2"]["K2_Lab1"] = 20; DB.graph["K2_Lab1"]["K2_Derslik2"] = 20;
+DB.graph["K2_Derslik3"]["K2_Lab2"] = 20; DB.graph["K2_Lab2"]["K2_Derslik3"] = 20;
 
 
-// --- YATAY BAĞLANTILAR: 3. KAT ---
+// YATAY BAĞLANTILAR - 3. KAT (İDARİ / HOCALAR)
 DB.graph["K3_Merkez"]["K3_AsansorA"] = 15; DB.graph["K3_AsansorA"]["K3_Merkez"] = 15;
 DB.graph["K3_Merkez"]["K3_AsansorB"] = 15; DB.graph["K3_AsansorB"]["K3_Merkez"] = 15;
 DB.graph["K3_Merkez"]["K3_AsansorC"] = 15; DB.graph["K3_AsansorC"]["K3_Merkez"] = 15;
 
-DB.graph["K3_AsansorA"]["K3_Ofis2"] = 20; DB.graph["K3_Ofis2"]["K3_AsansorA"] = 20;
 DB.graph["K3_AsansorA"]["K3_Ofis1"] = 25; DB.graph["K3_Ofis1"]["K3_AsansorA"] = 25;
-DB.graph["K3_AsansorB"]["K3_Ofis1"] = 20; DB.graph["K3_Ofis1"]["K3_AsansorB"] = 20;
-DB.graph["K3_AsansorB"]["K3_Ofis3"] = 25; DB.graph["K3_Ofis3"]["K3_AsansorB"] = 25;
-DB.graph["K3_AsansorC"]["K3_Ofis3"] = 20; DB.graph["K3_Ofis3"]["K3_AsansorC"] = 20;
+DB.graph["K3_AsansorA"]["K3_Ofis2"] = 15; DB.graph["K3_Ofis2"]["K3_AsansorA"] = 15;
+
+DB.graph["K3_AsansorC"]["K3_Ofis1"] = 25; DB.graph["K3_Ofis1"]["K3_AsansorC"] = 25;
+DB.graph["K3_AsansorC"]["K3_Ofis3"] = 15; DB.graph["K3_Ofis3"]["K3_AsansorC"] = 15;
+
+DB.graph["K3_AsansorB"]["K3_Ofis4"] = 25; DB.graph["K3_Ofis4"]["K3_AsansorB"] = 25;
+DB.graph["K3_AsansorB"]["K3_Ofis5"] = 25; DB.graph["K3_Ofis5"]["K3_AsansorB"] = 25;
+
+DB.graph["K3_Ofis2"]["K3_Ofis4"] = 20; DB.graph["K3_Ofis4"]["K3_Ofis2"] = 20;
+DB.graph["K3_Ofis3"]["K3_Ofis5"] = 20; DB.graph["K3_Ofis5"]["K3_Ofis3"] = 20;
 
 // ============================================================================
-// 3. NAVİGASYON MOTORU VE ARAYÜZ (DIJKSTRA ALGORİTMASI)
+// 3. MOTOR & ARAYÜZ (BU KISMA DOKUNMANA GEREK YOK)
 // ============================================================================
 class NavEngine {
     constructor(d) { this.n=d.nodes; this.g=d.graph; this.f=0; this.p=[]; this.s=false; }
@@ -270,7 +288,7 @@ class UIController {
     init() {
         let g={0:"",1:"",2:"",3:""};
         for(let[id,n] of Object.entries(this.e.n)) g[n.f]+=`<option value="${id}">${n.name}</option>`;
-        const h=`<option disabled selected>Seçim Yapın</option><optgroup label="Zemin Kat">${g[0]}</optgroup><optgroup label="1. Kat">${g[1]}</optgroup><optgroup label="2. Kat">${g[2]}</optgroup><optgroup label="3. Kat">${g[3]}</optgroup>`;
+        const h=`<option disabled selected>Konum Seçin</option><optgroup label="Zemin Kat">${g[0]}</optgroup><optgroup label="1. Kat">${g[1]}</optgroup><optgroup label="2. Kat">${g[2]}</optgroup><optgroup label="3. Kat">${g[3]}</optgroup>`;
         document.getElementById('select-start').innerHTML=h; document.getElementById('select-end').innerHTML=h;
         document.querySelectorAll('.floor-tabs button').forEach(b=>b.onclick=(ev)=>this.cf(parseInt(ev.target.dataset.floor)));
         document.getElementById('btn-calc').onclick=()=>this.calc(); document.getElementById('btn-sim').onclick=()=>this.sim();
@@ -292,7 +310,9 @@ class UIController {
         const svg=document.getElementById('routes-layer'); svg.innerHTML='';
         for(let i=0; i<this.e.p.length-1; i++){
             let n1=this.e.n[this.e.p[i]], n2=this.e.n[this.e.p[i+1]];
-            if(n1.f===this.e.f && n2.f===this.e.f) svg.innerHTML+=`<line x1="${n1.x}" y1="${n1.y}" x2="${n2.x}" y2="${n2.y}" stroke="var(--primary)" stroke-width="5" stroke-linecap="round" stroke-dasharray="10"><animate attributeName="stroke-dashoffset" values="20;0" dur="0.8s" repeatCount="indefinite"/></line>`;
+            if(n1.f===this.e.f && n2.f===this.e.f) {
+                svg.innerHTML+=`<line x1="${n1.x}" y1="${n1.y}" x2="${n2.x}" y2="${n2.y}" stroke="var(--primary)" stroke-width="6" stroke-linecap="round" stroke-dasharray="15"><animate attributeName="stroke-dashoffset" values="30;0" dur="0.8s" repeatCount="indefinite"/></line>`;
+            }
         }
     }
     calc() {
@@ -300,7 +320,7 @@ class UIController {
         if(!s||!e) return; this.e.p=this.e.findPath(s,e); this.cf(this.e.n[s].f);
         let h=""; for(let i=0; i<this.e.p.length-1; i++){
             let n1=this.e.n[this.e.p[i]], n2=this.e.n[this.e.p[i+1]];
-            if(n1.f!==n2.f) h+=`<p style="color:var(--secondary)">🏢 Asansör ile ${n2.f}. kata geçin.</p>`; else h+=`<p>• <b>${n2.name}</b> yönüne gidin.</p>`;
+            if(n1.f!==n2.f) h+=`<p style="color:var(--secondary); font-weight:bold;">🏢 Asansör ile ${n2.f}. kata geçin.</p>`; else h+=`<p>• <b>${n2.name}</b> yönüne gidin.</p>`;
         }
         document.getElementById('instructions').innerHTML=h; document.getElementById('btn-sim').style.display='block';
     }
