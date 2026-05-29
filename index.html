@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>KGTÜ Akıllı Kampüs | İletişim ve Tanıtım Topluluğu</title>
     <style>
-        /* --- MUHTEŞEM ARAYÜZ & RENK PALETİ --- */
+        /* --- ARAYÜZ & RENK PALETİ --- */
         :root {
             --bg-color: #030712; 
             --surface-color: rgba(17, 24, 39, 0.95); 
@@ -37,7 +37,7 @@
         @keyframes fadeOut { 0% { opacity: 1; } 100% { opacity: 0; visibility: hidden; } }
 
         /* --- HEADER --- */
-        header { padding: 12px 25px; background: rgba(3, 7, 18, 0.9); backdrop-filter: blur(15px); border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center; z-index: 100; box-shadow: 0 4px 30px rgba(0,0,0,0.8); }
+        header { padding: 12px 20px; background: rgba(3, 7, 18, 0.9); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center; z-index: 100; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
         .brand { display: flex; flex-direction: column; gap: 4px;}
         .brand h1 { font-size: clamp(16px, 4vw, 22px); font-weight: 800; letter-spacing: 1px; margin:0;}
         .brand h1 span { color: var(--primary); }
@@ -46,90 +46,52 @@
         .pulse-dot { width: 8px; height: 8px; background: var(--secondary); border-radius: 50%; animation: pulse 2s infinite; }
         @keyframes pulse { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(249, 115, 22, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(249, 115, 22, 0); } }
 
-        /* --- KAYA GİBİ SAĞLAM HARİTA ALANI (Çökme Yapmaz) --- */
+        /* --- SAF SVG HARİTA ALANI (Asla Kaymaz) --- */
         #map-viewport { flex: 1; position: relative; overflow: hidden; background: radial-gradient(circle at 50% 50%, #111827, #030712); display: flex; justify-content: center; align-items: center; padding: 10px; }
         
-        #map-wrapper {
-            position: relative;
-            width: 100%;
-            max-width: 900px; /* Maksimum genişlik */
-            /* 1000x800 oranını korumak için Padding Hack */
-            padding-bottom: 80%; 
-            margin: 0 auto;
-        }
-
-        #map-layer {
-            position: absolute;
-            top: 0; left: 0;
+        #map-svg {
             width: 100%; height: 100%;
+            max-width: 1000px; max-height: 80vh;
         }
-
-        .blueprint, .routes-svg, #nodes-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
-        .blueprint { opacity: 0.5; overflow: visible; }
-        .routes-svg { z-index: 5; overflow: visible; }
-        #nodes-layer { z-index: 10; pointer-events: auto; }
-        
-        /* NOKTALAR (Yüzdesel) */
-        .node { position: absolute; width: 2%; height: 2.5%; border-radius: 50%; transform: translate(-50%, -50%); cursor: pointer; border: 2px solid var(--bg-color); z-index: 10; transition: 0.2s; pointer-events: auto; box-shadow: 0 0 5px rgba(0,0,0,0.5);}
-        .node:hover { transform: translate(-50%, -50%) scale(1.5); box-shadow: 0 0 15px var(--primary); z-index: 20;}
-        
-        .node.elevator { background: #E2E8F0; border-radius: 50%; width: 2.5%; height: 3.1%; border: 2px solid #3B82F6; box-shadow: 0 0 10px rgba(59,130,246,0.5);} 
-        .node.entrance { background: #EF4444; width: 2%; height: 2.5%; }
-        .node.classroom { background: var(--primary); }
-        .node.academic { background: #A855F7; }
-        .node.special { background: var(--secondary); width: 3%; height: 3.75%; border: 2px solid #000; box-shadow: 0 0 15px var(--secondary);}
-        .node.coffee { background: var(--coffee); width: 3%; height: 3.75%; border: 2px solid #000; box-shadow: 0 0 15px var(--coffee);}
-        .node.kitchen { background: var(--kitchen); width: 3%; height: 3.75%; border: 2px solid #000; box-shadow: 0 0 15px var(--kitchen);}
-        
-        .node-label { position: absolute; background: rgba(3, 7, 18, 0.95); padding: 4px 8px; border-radius: 6px; border: 1px solid var(--border-light); color: var(--text-main); font-size: clamp(9px, 1.2vw, 12px); font-weight: 600; transform: translate(-50%, 15px); pointer-events: none; white-space: nowrap; z-index: 15; box-shadow: 0 4px 15px rgba(0,0,0,0.6); }
-
-        #avatar { position: absolute; width: 4%; height: 5%; background: #FFF; border-radius: 50%; transform: translate(-50%, -50%); display: none; z-index: 50; text-align: center; font-size: clamp(12px, 2vw, 18px); box-shadow: 0 0 20px #FFF; transition: left 0.6s linear, top 0.6s linear; display: flex; align-items: center; justify-content: center; }
 
         /* SIM OVERLAY */
-        #sim-overlay { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); background: rgba(16, 185, 129, 0.1); border: 1px solid var(--primary); padding: 10px 20px; border-radius: 20px; color: var(--primary); font-weight: bold; font-size: 14px; box-shadow: 0 0 20px rgba(16, 185, 129, 0.3); backdrop-filter: blur(10px); opacity: 0; visibility: hidden; transition: 0.3s; z-index: 60; display: flex; align-items: center; gap: 8px; }
+        #sim-overlay { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); background: rgba(16, 185, 129, 0.1); border: 1px solid var(--primary); padding: 8px 16px; border-radius: 20px; color: var(--primary); font-weight: bold; font-size: 13px; box-shadow: 0 0 20px rgba(16, 185, 129, 0.3); backdrop-filter: blur(10px); opacity: 0; visibility: hidden; transition: 0.3s; z-index: 60; display: flex; align-items: center; gap: 8px; }
         #sim-overlay.active { opacity: 1; visibility: visible; }
         #sim-overlay.success { background: rgba(16, 185, 129, 0.2); background-color: var(--primary); color: #000; box-shadow: 0 0 30px var(--primary);}
         .sim-spinner { width: 14px; height: 14px; border: 2px solid var(--primary); border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
         /* --- ALT KONTROL PANELİ --- */
-        .dashboard { background: var(--surface-color); padding: 15px 20px; z-index: 100; display: flex; flex-direction: column; gap: 10px; border-top: 1px solid var(--border-light); box-shadow: 0 -10px 40px rgba(0,0,0,0.8);}
-        .floor-tabs { display: flex; background: rgba(0,0,0,0.8); border-radius: 12px; padding: 4px; gap: 4px; border: 1px solid var(--border-light);}
-        .floor-tabs button { flex: 1; padding: 10px 5px; background: transparent; border: none; color: var(--text-muted); font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.3s; font-size: clamp(10px, 1.5vw, 13px);}
+        .dashboard { background: var(--surface-color); padding: 15px 20px; z-index: 100; display: flex; flex-direction: column; gap: 12px; border-top: 1px solid var(--border-light); box-shadow: 0 -10px 40px rgba(0,0,0,0.8); flex-shrink: 0;}
+        .floor-tabs { display: flex; background: rgba(0,0,0,0.8); border-radius: 12px; padding: 6px; gap: 6px; border: 1px solid var(--border-light);}
+        .floor-tabs button { flex: 1; padding: 10px 5px; background: transparent; border: none; color: var(--text-muted); font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.3s; font-size: clamp(11px, 2vw, 13px);}
         .floor-tabs button.active { background: var(--primary); color: #000; box-shadow: 0 0 15px rgba(16,185,129,0.3);}
 
-        /* CANLI ARAMA ÇUBUKLARI */
-        .routing-box { display: flex; gap: 10px; position: relative; }
-        .search-container { flex: 1; position: relative; }
-        .search-input { width: 100%; padding: 12px; border-radius: 8px; background: #1F2937; border: 1px solid var(--border-light); color: white; outline: none; font-size: 13px; font-weight: 500;}
-        .search-input:focus { border-color: var(--primary); }
-        .search-results { position: absolute; bottom: 100%; left: 0; width: 100%; background: #1F2937; border: 1px solid var(--primary); border-radius: 8px; max-height: 200px; overflow-y: auto; z-index: 200; display: none; margin-bottom: 5px; box-shadow: 0 -5px 20px rgba(0,0,0,0.5);}
-        .search-results.active { display: block; }
-        .search-item { padding: 10px 12px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); color: var(--text-main); font-size: 12px;}
-        .search-item:hover { background: var(--primary); color: #000; font-weight: bold;}
-
-        .btn { padding: 12px 15px; border-radius: 8px; border: none; font-weight: bold; font-size: 13px; cursor: pointer; transition: 0.2s; white-space: nowrap;}
+        /* NATIVE SEARCH BARS */
+        .routing-box { display: flex; gap: 10px; }
+        .search-container { flex: 1; display: flex; flex-direction: column;}
+        input[type="text"] { width: 100%; padding: 12px; border-radius: 8px; background: #1F2937; border: 1px solid var(--border-light); color: white; outline: none; font-size: 13px; font-weight: 500;}
+        input[type="text"]:focus { border-color: var(--primary); }
+        
+        .btn { padding: 12px 18px; border-radius: 8px; border: none; font-weight: bold; font-size: 13px; cursor: pointer; transition: 0.2s; white-space: nowrap;}
         .btn-primary { background: var(--primary); color: #000; }
         .btn-primary:hover { background: #059669; }
         .btn-secondary { background: var(--secondary); color: #000; display: none; }
         
-        .meta-info { display: flex; gap: 20px; font-size: 11px; color: var(--text-muted); border-top: 1px dashed var(--border-light); padding-top: 8px;}
+        .meta-info { display: flex; gap: 20px; font-size: 12px; color: var(--text-muted); border-top: 1px dashed var(--border-light); padding-top: 10px;}
         .meta-info span { display: flex; align-items: center; gap: 5px; }
-        .meta-info b { color: var(--primary); font-size: 13px;}
+        .meta-info b { color: var(--primary); font-size: 14px;}
 
-        #instructions { max-height: 60px; overflow-y: auto; font-size: 12px; color: var(--text-muted); line-height: 1.5; padding: 0 10px; border-left: 3px solid var(--primary);}
+        #instructions { max-height: 60px; overflow-y: auto; font-size: 13px; color: var(--text-muted); line-height: 1.5; padding: 0 10px; border-left: 3px solid var(--primary);}
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-thumb { background: #4B5563; border-radius: 10px; }
 
         @media (max-width: 768px) {
-            .header { padding: 10px; }
             .status { display: none; } 
             .routing-box { flex-direction: column; } 
             .floor-tabs { flex-wrap: wrap; } 
             .floor-tabs button { flex: 1 1 45%; padding: 8px; }
-            .dashboard { padding: 10px; }
-            .node-label { transform: translate(-50%, 10px); padding: 3px 6px;}
-            #map-viewport { padding: 5px;}
+            .dashboard { padding: 15px; }
         }
     </style>
 </head>
@@ -149,20 +111,23 @@
     </header>
 
     <div id="map-viewport">
-        <div id="map-wrapper">
-            <div id="map-layer">
-                <svg class="blueprint" viewBox="0 0 1000 800" width="100%" height="100%">
-                    <polygon points="500,150 250,600 750,600" fill="none" stroke="rgba(255, 255, 255, 0.08)" stroke-width="80" stroke-linejoin="round"/>
-                    <line x1="500" y1="420" x2="380" y2="370" stroke="rgba(255, 255, 255, 0.05)" stroke-width="40" stroke-linecap="round"/>
-                    <line x1="500" y1="420" x2="620" y2="370" stroke="rgba(255, 255, 255, 0.05)" stroke-width="40" stroke-linecap="round"/>
-                    <line x1="500" y1="420" x2="500" y2="550" stroke="rgba(255, 255, 255, 0.05)" stroke-width="40" stroke-linecap="round"/>
-                </svg>
-                <svg id="routes-layer" class="routes-svg" viewBox="0 0 1000 800" width="100%" height="100%"></svg>
-                <div id="nodes-layer"></div>
-                <div id="avatar" style="display: none;">🚶</div>
-                <div id="sim-overlay"><div class="sim-spinner"></div> <span id="sim-text">KGTÜ NAV Yönlendiriyor...</span></div>
-            </div>
-        </div>
+        <svg id="map-svg" viewBox="0 0 1000 800" preserveAspectRatio="xMidYMid meet">
+            <polygon points="500,150 250,600 750,600" fill="none" stroke="rgba(255, 255, 255, 0.08)" stroke-width="80" stroke-linejoin="round"/>
+            <line x1="500" y1="420" x2="380" y2="370" stroke="rgba(255, 255, 255, 0.05)" stroke-width="40" stroke-linecap="round"/>
+            <line x1="500" y1="420" x2="620" y2="370" stroke="rgba(255, 255, 255, 0.05)" stroke-width="40" stroke-linecap="round"/>
+            <line x1="500" y1="420" x2="500" y2="550" stroke="rgba(255, 255, 255, 0.05)" stroke-width="40" stroke-linecap="round"/>
+            
+            <g id="routes-layer"></g>
+            
+            <g id="nodes-layer"></g>
+
+            <g id="avatar-layer" style="display: none; transition: transform 0.6s linear;">
+                <circle cx="0" cy="0" r="16" fill="#FFF" />
+                <text x="0" y="5" font-size="18" text-anchor="middle" style="pointer-events: none;">🚶</text>
+            </g>
+        </svg>
+
+        <div id="sim-overlay"><div class="sim-spinner"></div> <span id="sim-text">KGTÜ NAV Yönlendiriyor...</span></div>
     </div>
 
     <div class="dashboard">
@@ -175,13 +140,12 @@
 
         <div class="routing-box">
             <div class="search-container">
-                <input type="text" id="select-start" class="search-input" placeholder="Neredesiniz? (Arama Yapın)" autocomplete="off">
-                <div id="results-start" class="search-results"></div>
+                <input type="text" id="select-start" list="nodes-list" placeholder="Neredesiniz? (Arama Yapın)" autocomplete="off">
             </div>
             <div class="search-container">
-                <input type="text" id="select-end" class="search-input" placeholder="Nereye Gideceksiniz?" autocomplete="off">
-                <div id="results-end" class="search-results"></div>
+                <input type="text" id="select-end" list="nodes-list" placeholder="Nereye Gideceksiniz?" autocomplete="off">
             </div>
+            <datalist id="nodes-list"></datalist>
             
             <button class="btn btn-primary" id="btn-calc">Rotayı Çiz</button>
             <button class="btn btn-secondary" id="btn-sim">▶ Simülasyon</button>
@@ -243,7 +207,7 @@ const DB = {
 
 for (let id in DB.nodes) { DB.graph[id] = {}; }
 
-// DİKEY (ASANSÖRLER)
+// DİKEY BAĞLANTILAR (ASANSÖRLER)
 DB.graph["Z_GirisA"]["K1_AsansorA"] = 30; DB.graph["K1_AsansorA"]["Z_GirisA"] = 30;
 DB.graph["K1_AsansorA"]["K2_AsansorA"] = 30; DB.graph["K2_AsansorA"]["K1_AsansorA"] = 30;
 DB.graph["K2_AsansorA"]["K3_AsansorA"] = 30; DB.graph["K3_AsansorA"]["K2_AsansorA"] = 30;
@@ -329,78 +293,62 @@ class NavEngine {
 }
 
 class UIController {
-    constructor(e) { this.e=e; this.init(); this.allNames = Object.values(this.e.n).map(n => n.name); }
+    constructor(e) { this.e=e; this.init(); }
     
     init() {
-        this.setupLiveSearch('select-start', 'results-start');
-        this.setupLiveSearch('select-end', 'results-end');
+        // Datalist Doldurma
+        let listHTML = "";
+        for(let [id, n] of Object.entries(this.e.n)) {
+            listHTML += `<option value="${n.name}"></option>`;
+        }
+        document.getElementById('nodes-list').innerHTML = listHTML;
 
         document.querySelectorAll('.floor-tabs button').forEach(b=>b.onclick=(ev)=>this.cf(parseInt(ev.target.dataset.floor)));
         document.getElementById('btn-calc').onclick=()=>this.calc(); document.getElementById('btn-sim').onclick=()=>this.sim();
         
-        document.addEventListener('click', (e) => {
-            if(!e.target.closest('.search-container')) {
-                document.getElementById('results-start').classList.remove('active');
-                document.getElementById('results-end').classList.remove('active');
-            }
-        });
-
         this.cf(0);
     }
-
-    setupLiveSearch(inputId, resultsId) {
-        const input = document.getElementById(inputId);
-        const results = document.getElementById(resultsId);
-
-        input.addEventListener('input', () => {
-            const val = input.value.toLowerCase();
-            results.innerHTML = '';
-            if(val.length < 1) { results.classList.remove('active'); return; }
-            
-            const filtered = this.allNames.filter(n => n.toLowerCase().includes(val));
-            if(filtered.length > 0) {
-                results.classList.add('active');
-                filtered.forEach(name => {
-                    const div = document.createElement('div');
-                    div.className = 'search-item';
-                    div.innerText = name;
-                    div.onclick = () => {
-                        input.value = name;
-                        results.classList.remove('active');
-                    };
-                    results.appendChild(div);
-                });
-            } else {
-                results.classList.remove('active');
-            }
-        });
-    }
-
-    getPercent(val, max) { return (val / max) * 100; }
 
     cf(f, bypassSimCheck = false) {
         if(this.e.s && !bypassSimCheck) return; 
         this.e.f=f;
+        
         document.querySelectorAll('.floor-tabs button').forEach(b=>b.classList.remove('active'));
         document.querySelector(`.floor-tabs button[data-floor="${f}"]`).classList.add('active');
         
-        const c=document.getElementById('nodes-layer'); c.innerHTML='';
-        for(let[id,n] of Object.entries(this.e.n)){
-            if(n.f===f){
-                let px = this.getPercent(n.x, 1000);
-                let py = this.getPercent(n.y, 800);
-                c.innerHTML+=`<div class="node ${n.type||''}" style="left:${px}%; top:${py}%;" onclick="document.getElementById('select-end').value='${n.name}'"></div><div class="node-label" style="left:${px}%; top:${py}%;">${n.name}</div>`;
+        const layer = document.getElementById('nodes-layer'); 
+        layer.innerHTML = '';
+        
+        for(let [id, n] of Object.entries(this.e.n)){
+            if(n.f === f){
+                // Renk ve Boyut Belirleme
+                let fill = "#10B981", r = 8, stroke = "transparent", sw = 0;
+                
+                if(n.type === 'elevator') { fill = "#E2E8F0"; r = 10; stroke = "#3B82F6"; sw = 3; }
+                else if(n.type === 'academic') { fill = "#A855F7"; }
+                else if(n.type === 'special') { fill = "#F97316"; r = 12; stroke = "#000"; sw = 2; }
+                else if(n.type === 'coffee') { fill = "#D97706"; r = 12; stroke = "#000"; sw = 2; }
+                else if(n.type === 'kitchen') { fill = "#EAB308"; r = 12; stroke = "#000"; sw = 2; }
+
+                // Pürüzsüz SVG Çizimi (Text Background Stroke yöntemiyle etiketler)
+                layer.innerHTML += `
+                    <g style="cursor: pointer;" onclick="document.getElementById('select-end').value='${n.name}'">
+                        <circle cx="${n.x}" cy="${n.y}" r="${r}" fill="${fill}" stroke="${stroke}" stroke-width="${sw}" />
+                        <text x="${n.x}" y="${n.y + 24}" fill="#F3F4F6" font-size="13" font-family="sans-serif" font-weight="bold" text-anchor="middle" stroke="#030712" stroke-width="4" paint-order="stroke" style="pointer-events: none;">${n.name}</text>
+                    </g>
+                `;
             }
         }
         this.rp();
     }
     
     rp() {
-        const svg=document.getElementById('routes-layer'); svg.innerHTML='';
+        const svg = document.getElementById('routes-layer'); 
+        svg.innerHTML = '';
         for(let i=0; i<this.e.p.length-1; i++){
-            let n1=this.e.n[this.e.p[i]], n2=this.e.n[this.e.p[i+1]];
-            if(n1.f===this.e.f && n2.f===this.e.f) {
-                svg.innerHTML+=`<line x1="${n1.x}" y1="${n1.y}" x2="${n2.x}" y2="${n2.y}" stroke="var(--primary)" stroke-width="8" stroke-linecap="round" stroke-dasharray="15"><animate attributeName="stroke-dashoffset" values="30;0" dur="0.8s" repeatCount="indefinite"/></line>`;
+            let n1 = this.e.n[this.e.p[i]], n2 = this.e.n[this.e.p[i+1]];
+            if(n1.f === this.e.f && n2.f === this.e.f) {
+                svg.innerHTML += `<line x1="${n1.x}" y1="${n1.y}" x2="${n2.x}" y2="${n2.y}" stroke="#10B981" stroke-width="6" stroke-linecap="round" stroke-dasharray="15"><animate attributeName="stroke-dashoffset" values="30;0" dur="0.8s" repeatCount="indefinite"/></line>`;
             }
         }
     }
@@ -417,13 +365,20 @@ class UIController {
             return;
         }
 
-        this.e.p=this.e.findPath(s,e); this.cf(this.e.n[s].f);
-        let h=""; for(let i=0; i<this.e.p.length-1; i++){
-            let n1=this.e.n[this.e.p[i]], n2=this.e.n[this.e.p[i+1]];
-            if(n1.f!==n2.f) h+=`<p class="floor-change">🏢 Asansör ile ${n2.f}. kata geçin.</p>`; else h+=`<p><b>${n2.name}</b> yönüne gidin.</p>`;
+        this.e.p = this.e.findPath(s,e); 
+        this.cf(this.e.n[s].f);
+        
+        let h = ""; 
+        for(let i=0; i<this.e.p.length-1; i++){
+            let n1 = this.e.n[this.e.p[i]], n2 = this.e.n[this.e.p[i+1]];
+            if(n1.f !== n2.f) {
+                h += `<p class="floor-change">🏢 Asansör ile ${n2.f}. kata geçin.</p>`; 
+            } else {
+                h += `<p><b>${n2.name}</b> yönüne gidin.</p>`;
+            }
         }
-        document.getElementById('instructions').innerHTML=h; 
-        document.getElementById('btn-sim').style.display='block';
+        document.getElementById('instructions').innerHTML = h; 
+        document.getElementById('btn-sim').style.display = 'block';
 
         let stats = this.e.getStats(this.e.p);
         document.getElementById('meta-dist').innerText = stats.d + "m";
@@ -431,48 +386,52 @@ class UIController {
     }
     
     async sim() {
-        if(this.e.s || this.e.p.length===0) return; this.e.s=true;
+        if(this.e.s || this.e.p.length === 0) return; 
+        this.e.s = true;
         
-        const avG = document.getElementById('avatar');
+        const avG = document.getElementById('avatar-layer');
+        const avText = avG.querySelector('text');
         const overlay = document.getElementById('sim-overlay'); 
         const simText = document.getElementById('sim-text');
         
-        avG.style.display = 'flex';
+        avG.style.display = 'block';
         overlay.classList.add('active');
         overlay.classList.remove('success');
         
         for(let i=0; i<this.e.p.length; i++){
-            let n=this.e.n[this.e.p[i]];
+            let n = this.e.n[this.e.p[i]];
             
-            if(n.f!==this.e.f) { 
-                avG.innerHTML="↕️"; 
+            // Eğer kat değişimi varsa
+            if(n.f !== this.e.f) { 
+                avText.innerHTML = "↕️"; 
                 simText.innerText = `${n.f}. Kata Çıkılıyor...`;
-                await new Promise(r=>setTimeout(r, 1200)); 
+                
+                await new Promise(r => setTimeout(r, 1200)); 
                 this.cf(n.f, true); 
-                avG.innerHTML="🚶"; 
+                
+                avText.innerHTML = "🚶"; 
                 simText.innerText = "KGTÜ NAV Yönlendiriyor...";
-                await new Promise(r=>setTimeout(r, 300)); 
+                await new Promise(r => setTimeout(r, 300)); 
             }
             
-            let px = this.getPercent(n.x, 1000);
-            let py = this.getPercent(n.y, 800);
-            avG.style.left=`${px}%`; av.style.top=`${py}%`; 
-            
-            await new Promise(r=>setTimeout(r, 800));
+            // Konum güncellemesi (SVG transform)
+            avG.style.transform = `translate(${n.x}px, ${n.y}px)`;
+            await new Promise(r => setTimeout(r, 800));
         }
         
-        avG.innerHTML="📍"; 
+        avText.innerHTML = "📍"; 
         overlay.classList.add('success');
         overlay.innerHTML = `<span>✅ Hedefe Ulaşıldı</span>`;
         
         setTimeout(()=>{
-            avG.style.display='none'; 
+            avG.style.display = 'none'; 
             overlay.classList.remove('active'); 
             overlay.innerHTML = `<div class="sim-spinner"></div> <span id="sim-text">KGTÜ NAV Yönlendiriyor...</span>`;
-            this.e.s=false;
+            this.e.s = false;
         }, 2500);
     }
 }
+
 window.onload = () => new UIController(new NavEngine(DB));
 </script>
 </body>
