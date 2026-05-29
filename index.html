@@ -31,14 +31,14 @@
             pointer-events: none;
         }
         #splash-screen h1 {
-            font-size: clamp(2rem, 5vw, 3.5rem); letter-spacing: 5px; color: var(--text-main);
+            font-size: 3.5rem; letter-spacing: 5px; color: var(--text-main);
             animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-            text-shadow: 0 0 20px rgba(16, 185, 129, 0.4); text-align: center;
+            text-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
         }
         #splash-screen span { color: var(--primary); }
         #splash-screen p {
             color: var(--secondary); margin-top: 15px; font-weight: bold; letter-spacing: 3px; font-size: 14px;
-            opacity: 0; animation: fadeIn 0.5s ease-in-out 0.8s forwards; text-align: center;
+            opacity: 0; animation: fadeIn 0.5s ease-in-out 0.8s forwards;
         }
 
         @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
@@ -51,84 +51,75 @@
             border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between;
             align-items: center; z-index: 100; box-shadow: 0 4px 30px rgba(0,0,0,0.8);
         }
-        .brand { display: flex; flex-direction: column; gap: 4px;}
-        .brand h1 { font-size: clamp(16px, 4vw, 22px); font-weight: 800; letter-spacing: 1px; margin:0;}
+        .brand { display: flex; flex-direction: column; gap: 2px;}
+        .brand h1 { font-size: 20px; font-weight: 800; letter-spacing: 1px; margin:0;}
         .brand h1 span { color: var(--primary); }
-        .credit { font-size: 11px; color: var(--text-muted); font-weight: 500; letter-spacing: 0.5px;}
-        .status { font-size: 11px; font-weight: bold; color: var(--secondary); background: rgba(249,115,22,0.1); padding: 5px 12px; border-radius: 20px; border: 1px solid rgba(249,115,22,0.3); display: flex; align-items: center; gap: 5px;}
-        .pulse-dot { width: 8px; height: 8px; background: var(--secondary); border-radius: 50%; animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(249, 115, 22, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(249, 115, 22, 0); } }
+        .credit { font-size: 10px; color: var(--text-muted); font-weight: 500; letter-spacing: 0.5px;}
+        .status { font-size: 11px; font-weight: bold; color: var(--secondary); background: rgba(249,115,22,0.1); padding: 5px 12px; border-radius: 20px; border: 1px solid rgba(249,115,22,0.3);}
 
-        /* --- HARİTA ALANI (Tamamen Responsive SVG Container) --- */
-        #map-viewport { 
-            flex: 1; position: relative; overflow: hidden; 
-            background: radial-gradient(circle at 50% 50%, #111827, #030712); 
-            display: flex; justify-content: center; align-items: center;
-            padding: 10px; 
-        }
+        /* --- HARİTA ALANI (Sıkışmayı Önleyen Dinamik Yapı) --- */
+        #map-viewport { flex: 1; position: relative; overflow: hidden; background: radial-gradient(circle at 50% 50%, #111827, #030712); display: flex; justify-content: center; align-items: center;}
         
         #map-layer { 
-            width: 100%; height: 100%;
-            max-width: 1000px; max-height: 800px;
+            position: absolute; 
+            width: 1000px; height: 800px; 
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(calc(min(100vw / 1050, 100vh / 1000))); 
         }
-
-        /* SVG İçi Stiller */
-        .svg-outline { fill: none; stroke: rgba(255, 255, 255, 0.08); stroke-width: 80; stroke-linejoin: round; }
-        .svg-inner { fill: rgba(2, 6, 23, 1); stroke: rgba(255, 255, 255, 0.05); stroke-width: 40; stroke-linejoin: round; }
-        .svg-path { fill: none; stroke: rgba(255, 255, 255, 0.05); stroke-width: 40; stroke-linecap: round; }
         
-        .svg-node { cursor: pointer; transition: 0.2s; stroke: #020617; stroke-width: 2;}
-        .svg-node:hover { r: 15; fill: var(--primary); }
-        .svg-label-bg { fill: rgba(3, 7, 18, 0.95); stroke: rgba(255, 255, 255, 0.1); stroke-width: 1; rx: 5; pointer-events: none;}
-        .svg-label-text { fill: var(--text-main); font-size: 14px; font-weight: bold; font-family: sans-serif; text-anchor: middle; pointer-events: none;}
-
-        #avatar-group { transition: transform 0.6s linear; display: none; }
-        #avatar-bg { fill: #FFF; filter: drop-shadow(0 0 10px #FFF); }
-        #avatar-text { font-size: 20px; text-anchor: middle; alignment-baseline: middle; }
-
-        /* --- KGTÜ NAV ANİMASYONLU BİLDİRİM KUTUSU --- */
-        #sim-overlay {
-            position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
-            background: rgba(16, 185, 129, 0.1); border: 1px solid var(--primary);
-            padding: 10px 20px; border-radius: 20px; color: var(--primary); font-weight: bold; font-size: 14px;
-            box-shadow: 0 0 20px rgba(16, 185, 129, 0.3); backdrop-filter: blur(10px);
-            opacity: 0; visibility: hidden; transition: 0.3s; z-index: 60; display: flex; align-items: center; gap: 8px;
+        .blueprint { position: absolute; width: 100%; height: 100%; opacity: 0.5; pointer-events: none; overflow: visible; }
+        .routes-svg { position: absolute; width: 100%; height: 100%; pointer-events: none; z-index: 5; overflow: visible; }
+        
+        /* NOKTALAR (NODES) */
+        .node { position: absolute; width: 16px; height: 16px; border-radius: 50%; transform: translate(-50%, -50%); cursor: pointer; border: 2px solid var(--bg-color); z-index: 10; transition: 0.2s;}
+        .node:hover { transform: translate(-50%, -50%) scale(1.5); box-shadow: 0 0 15px var(--primary); z-index: 20;}
+        
+        .node.elevator { background: #E2E8F0; border-radius: 8px; width: 22px; height: 22px; border: 3px solid #3B82F6; box-shadow: 0 0 10px rgba(59,130,246,0.5);} 
+        .node.entrance { background: #EF4444; width: 20px; height: 20px; }
+        .node.classroom { background: var(--primary); }
+        .node.academic { background: #A855F7; }
+        .node.special { background: var(--secondary); width: 24px; height: 24px; border: 3px solid #000; box-shadow: 0 0 15px var(--secondary);}
+        .node.coffee { background: var(--coffee); width: 24px; height: 24px; border: 3px solid #000; box-shadow: 0 0 15px var(--coffee);}
+        .node.kitchen { background: var(--kitchen); width: 24px; height: 24px; border: 3px solid #000; box-shadow: 0 0 15px var(--kitchen);}
+        
+        .node-label {
+            position: absolute; background: rgba(3, 7, 18, 0.95); padding: 6px 12px; border-radius: 8px;
+            border: 1px solid var(--border-light); color: var(--text-main); font-size: 12px; font-weight: 600;
+            transform: translate(-50%, 18px); pointer-events: none; white-space: nowrap; z-index: 15;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
         }
-        #sim-overlay.active { opacity: 1; visibility: visible; }
-        .sim-spinner { width: 14px; height: 14px; border: 2px solid var(--primary); border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
+
+        #avatar {
+            position: absolute; width: 34px; height: 34px; background: #FFF; border-radius: 50%;
+            transform: translate(-50%, -50%); display: none; z-index: 50; text-align: center;
+            line-height: 34px; font-size: 18px; box-shadow: 0 0 20px #FFF; transition: left 0.6s linear, top 0.6s linear;
+        }
 
         /* --- ALT KONTROL PANELİ --- */
-        .dashboard { background: var(--surface-color); padding: 20px 25px; z-index: 100; display: flex; flex-direction: column; gap: 12px; border-top: 1px solid var(--border-light); box-shadow: 0 -10px 40px rgba(0,0,0,0.8);}
+        .dashboard { background: var(--surface-color); padding: 20px 25px; z-index: 100; display: flex; flex-direction: column; gap: 15px; border-top: 1px solid var(--border-light); box-shadow: 0 -10px 40px rgba(0,0,0,0.8);}
         
         .floor-tabs { display: flex; background: rgba(0,0,0,0.8); border-radius: 12px; padding: 6px; gap: 6px; border: 1px solid var(--border-light);}
-        .floor-tabs button { flex: 1; padding: 12px 5px; background: transparent; border: none; color: var(--text-muted); font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.3s; font-size: clamp(11px, 2vw, 13px);}
+        .floor-tabs button { flex: 1; padding: 12px; background: transparent; border: none; color: var(--text-muted); font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.3s;}
         .floor-tabs button.active { background: var(--primary); color: #000; box-shadow: 0 0 15px rgba(16,185,129,0.3);}
 
-        .routing-box { display: flex; gap: 10px; }
-        select { flex: 1; padding: 14px; border-radius: 10px; background: #1F2937; border: 1px solid var(--border-light); color: white; outline: none; font-size: 14px; font-weight: 500;}
-        select:focus { border-color: var(--primary); }
-        .btn { padding: 14px 20px; border-radius: 10px; border: none; font-weight: bold; font-size: 14px; cursor: pointer; transition: 0.2s; white-space: nowrap;}
+        /* Akıllı Arama Çubukları */
+        .routing-box { display: flex; gap: 12px; }
+        input[type="text"] { flex: 1; padding: 14px; border-radius: 10px; background: #1F2937; border: 1px solid var(--border-light); color: white; outline: none; font-size: 14px; font-weight: 500;}
+        input[type="text"]:focus { border-color: var(--primary); }
+        
+        .btn { padding: 14px 25px; border-radius: 10px; border: none; font-weight: bold; font-size: 14px; cursor: pointer; transition: 0.2s; }
         .btn-primary { background: var(--primary); color: #000; }
         .btn-primary:hover { background: #059669; }
         .btn-secondary { background: var(--secondary); color: #000; display: none; }
         
-        .meta-info { display: flex; gap: 20px; font-size: 12px; color: var(--text-muted); border-top: 1px dashed var(--border-light); padding-top: 10px;}
-        .meta-info span { display: flex; align-items: center; gap: 5px; }
-        .meta-info b { color: var(--primary); font-size: 14px;}
-
         #instructions { max-height: 80px; overflow-y: auto; font-size: 13px; color: var(--text-muted); line-height: 1.6; padding: 0 10px; border-left: 3px solid var(--primary);}
-        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-thumb { background: #4B5563; border-radius: 10px; }
-
-        /* --- MOBİL OPTİMİZASYONLARI --- */
+        
+        /* Responsive düzenlemeler */
         @media (max-width: 768px) {
-            .header { padding: 10px 15px; }
-            .status { display: none; } 
-            .routing-box { flex-direction: column; } 
-            .floor-tabs { flex-wrap: wrap; } 
-            .floor-tabs button { flex: 1 1 45%; padding: 10px; }
-            .dashboard { padding: 15px; }
+            .routing-box { flex-direction: column; }
+            .status { display: none; }
         }
     </style>
 </head>
@@ -144,26 +135,21 @@
             <h1>KGTÜ <span>NAV OS</span></h1>
             <div class="credit">İletişim ve Tanıtım Topluluğu tarafından hazırlanmıştır</div>
         </div>
-        <div class="status"><div class="pulse-dot"></div>KAMPÜS İÇİ YÖNLENDİRME AKTİF</div>
+        <div class="status">KAMPÜS İÇİ YÖNLENDİRME AKTİF</div>
     </header>
 
     <div id="map-viewport">
-        <svg id="map-layer" viewBox="0 0 1000 800" preserveAspectRatio="xMidYMid meet">
-            <polygon points="500,150 250,600 750,600" class="svg-outline"/>
-            <line x1="500" y1="420" x2="380" y2="370" class="svg-path"/>
-            <line x1="500" y1="420" x2="620" y2="370" class="svg-path"/>
-            <line x1="500" y1="420" x2="500" y2="550" class="svg-path"/>
-            
-            <g id="routes-group"></g>
-            
-            <g id="nodes-group"></g>
-
-            <g id="avatar-group">
-                <circle id="avatar-bg" cx="0" cy="0" r="16" />
-                <text id="avatar-text" x="0" y="2">🚶</text>
-            </g>
-        </svg>
-        <div id="sim-overlay"><div class="sim-spinner"></div> <span>KGTÜ NAV Yönlendiriyor...</span></div>
+        <div id="map-layer">
+            <svg class="blueprint" viewBox="0 0 1000 800" preserveAspectRatio="xMidYMid meet">
+                <polygon points="500,150 250,600 750,600" fill="none" stroke="rgba(255, 255, 255, 0.08)" stroke-width="80" stroke-linejoin="round"/>
+                <line x1="500" y1="420" x2="380" y2="370" stroke="rgba(255, 255, 255, 0.05)" stroke-width="40" stroke-linecap="round"/>
+                <line x1="500" y1="420" x2="620" y2="370" stroke="rgba(255, 255, 255, 0.05)" stroke-width="40" stroke-linecap="round"/>
+                <line x1="500" y1="420" x2="500" y2="550" stroke="rgba(255, 255, 255, 0.05)" stroke-width="40" stroke-linecap="round"/>
+            </svg>
+            <svg id="routes-layer" class="routes-svg"></svg>
+            <div id="nodes-layer"></div>
+            <div id="avatar">🚶</div>
+        </div>
     </div>
 
     <div class="dashboard">
@@ -175,18 +161,15 @@
         </div>
 
         <div class="routing-box">
-            <select id="select-start"></select>
-            <select id="select-end"></select>
+            <input type="text" id="select-start" list="locations-list" placeholder="Neredesiniz? (Arama Yapın)" autocomplete="off">
+            <input type="text" id="select-end" list="locations-list" placeholder="Nereye Gideceksiniz?" autocomplete="off">
+            <datalist id="locations-list"></datalist>
+            
             <button class="btn btn-primary" id="btn-calc">Rotayı Çiz</button>
             <button class="btn btn-secondary" id="btn-sim">▶ Simülasyon</button>
         </div>
-        
-        <div class="meta-info">
-            <span>📏 Tahmini Mesafe: <b id="meta-dist">0m</b></span>
-            <span>⏱️ Yürüme Süresi: <b id="meta-time">0sn</b></span>
-        </div>
 
-        <div id="instructions">Lütfen menülerden başlangıç ve hedef konumlarınızı seçin.</div>
+        <div id="instructions">Akıllı arama çubuğunu kullanarak veya haritaya tıklayarak hedefinizi seçin.</div>
     </div>
 
 <script>
@@ -195,42 +178,46 @@
 // ============================================================================
 const DB = {
     nodes: {
-        "Z_Merkez":     { x: 500, y: 420, f: 0, name: "Ana Fuaye (Merkez)", type: "special", color: "var(--secondary)", r: 12 },
-        "Z_GirisA":     { x: 380, y: 370, f: 0, name: "A Blok Kapısı / Asansör", type: "elevator", color: "#E2E8F0", r: 11, s: "#3B82F6" },
-        "Z_GirisC":     { x: 620, y: 370, f: 0, name: "C Blok Kapısı / Asansör", type: "elevator", color: "#E2E8F0", r: 11, s: "#3B82F6" },
-        "Z_GirisB":     { x: 500, y: 550, f: 0, name: "B Blok Kapısı / Asansör", type: "elevator", color: "#E2E8F0", r: 11, s: "#3B82F6" },
-        "Z_Amfi1":      { x: 300, y: 400, f: 0, name: "Büyük Amfi 1", type: "classroom", color: "var(--primary)", r: 8 },
-        "Z_Amfi2":      { x: 700, y: 400, f: 0, name: "Büyük Amfi 2", type: "classroom", color: "var(--primary)", r: 8 },
+        // --- ZEMİN KAT ---
+        "Z_Merkez":     { x: 500, y: 420, f: 0, name: "Ana Fuaye (Merkez)", type: "special" },
+        "Z_GirisA":     { x: 380, y: 370, f: 0, name: "A Blok Kapısı / Asansör", type: "elevator" },
+        "Z_GirisC":     { x: 620, y: 370, f: 0, name: "C Blok Kapısı / Asansör", type: "elevator" },
+        "Z_GirisB":     { x: 500, y: 550, f: 0, name: "B Blok Kapısı / Asansör", type: "elevator" },
+        "Z_Amfi1":      { x: 300, y: 400, f: 0, name: "Büyük Amfi 1", type: "classroom" },
+        "Z_Amfi2":      { x: 700, y: 400, f: 0, name: "Büyük Amfi 2", type: "classroom" },
 
-        "K1_Merkez":    { x: 500, y: 420, f: 1, name: "NEO COFFEE", type: "coffee", color: "var(--coffee)", r: 12 },
-        "K1_AsansorA":  { x: 380, y: 370, f: 1, name: "A Blok Asansörü", type: "elevator", color: "#E2E8F0", r: 11, s: "#3B82F6" },
-        "K1_AsansorC":  { x: 620, y: 370, f: 1, name: "C Blok Asansörü", type: "elevator", color: "#E2E8F0", r: 11, s: "#3B82F6" },
-        "K1_AsansorB":  { x: 500, y: 550, f: 1, name: "B Blok Asansörü", type: "elevator", color: "#E2E8F0", r: 11, s: "#3B82F6" },
-        "K1_Derslik1":  { x: 500, y: 150, f: 1, name: "Derslik 101-105", type: "classroom", color: "var(--primary)", r: 8 },
-        "K1_Derslik2":  { x: 300, y: 400, f: 1, name: "Derslik 106-110", type: "classroom", color: "var(--primary)", r: 8 },
-        "K1_Derslik3":  { x: 700, y: 400, f: 1, name: "Derslik 111-115", type: "classroom", color: "var(--primary)", r: 8 },
-        "K1_Lab1":      { x: 250, y: 600, f: 1, name: "MBG Laboratuvarı", type: "academic", color: "#A855F7", r: 8 },
-        "K1_Lab2":      { x: 750, y: 600, f: 1, name: "Fen Lab", type: "academic", color: "#A855F7", r: 8 },
+        // --- 1. KAT (NEO COFFEE KAT) ---
+        "K1_Merkez":    { x: 500, y: 420, f: 1, name: "NEO COFFEE", type: "coffee" },
+        "K1_AsansorA":  { x: 380, y: 370, f: 1, name: "A Blok Asansörü", type: "elevator" },
+        "K1_AsansorC":  { x: 620, y: 370, f: 1, name: "C Blok Asansörü", type: "elevator" },
+        "K1_AsansorB":  { x: 500, y: 550, f: 1, name: "B Blok Asansörü", type: "elevator" },
+        "K1_Derslik1":  { x: 500, y: 150, f: 1, name: "Derslik 101-105", type: "classroom" },
+        "K1_Derslik2":  { x: 300, y: 400, f: 1, name: "Derslik 106-110", type: "classroom" },
+        "K1_Derslik3":  { x: 700, y: 400, f: 1, name: "Derslik 111-115", type: "classroom" },
+        "K1_Lab1":      { x: 250, y: 600, f: 1, name: "MBG Laboratuvarı", type: "academic" },
+        "K1_Lab2":      { x: 750, y: 600, f: 1, name: "Fen Lab", type: "academic" },
 
-        "K2_Merkez":    { x: 500, y: 420, f: 2, name: "NEO MUTFAK", type: "kitchen", color: "var(--kitchen)", r: 12 },
-        "K2_AsansorA":  { x: 380, y: 370, f: 2, name: "A Blok Asansörü", type: "elevator", color: "#E2E8F0", r: 11, s: "#3B82F6" },
-        "K2_AsansorC":  { x: 620, y: 370, f: 2, name: "C Blok Asansörü", type: "elevator", color: "#E2E8F0", r: 11, s: "#3B82F6" },
-        "K2_AsansorB":  { x: 500, y: 550, f: 2, name: "B Blok Asansörü", type: "elevator", color: "#E2E8F0", r: 11, s: "#3B82F6" },
-        "K2_Derslik1":  { x: 500, y: 150, f: 2, name: "Derslik 201-205", type: "classroom", color: "var(--primary)", r: 8 },
-        "K2_Derslik2":  { x: 300, y: 400, f: 2, name: "Derslik 206-210", type: "classroom", color: "var(--primary)", r: 8 },
-        "K2_Derslik3":  { x: 700, y: 400, f: 2, name: "Derslik 211-215", type: "classroom", color: "var(--primary)", r: 8 },
-        "K2_Lab1":      { x: 250, y: 600, f: 2, name: "Bilgisayar Lab", type: "academic", color: "#A855F7", r: 8 },
-        "K2_Lab2":      { x: 750, y: 600, f: 2, name: "Mimarlık Atölyesi", type: "academic", color: "#A855F7", r: 8 },
+        // --- 2. KAT (NEO MUTFAK KAT) ---
+        "K2_Merkez":    { x: 500, y: 420, f: 2, name: "NEO MUTFAK", type: "kitchen" },
+        "K2_AsansorA":  { x: 380, y: 370, f: 2, name: "A Blok Asansörü", type: "elevator" },
+        "K2_AsansorC":  { x: 620, y: 370, f: 2, name: "C Blok Asansörü", type: "elevator" },
+        "K2_AsansorB":  { x: 500, y: 550, f: 2, name: "B Blok Asansörü", type: "elevator" },
+        "K2_Derslik1":  { x: 500, y: 150, f: 2, name: "Derslik 201-205", type: "classroom" },
+        "K2_Derslik2":  { x: 300, y: 400, f: 2, name: "Derslik 206-210", type: "classroom" },
+        "K2_Derslik3":  { x: 700, y: 400, f: 2, name: "Derslik 211-215", type: "classroom" },
+        "K2_Lab1":      { x: 250, y: 600, f: 2, name: "Bilgisayar Lab", type: "academic" },
+        "K2_Lab2":      { x: 750, y: 600, f: 2, name: "Mimarlık Atölyesi", type: "academic" },
 
-        "K3_Merkez":    { x: 500, y: 420, f: 3, name: "Merkez İdari Alan", type: "academic", color: "#A855F7", r: 12 },
-        "K3_AsansorA":  { x: 380, y: 370, f: 3, name: "A Blok Asansörü", type: "elevator", color: "#E2E8F0", r: 11, s: "#3B82F6" },
-        "K3_AsansorC":  { x: 620, y: 370, f: 3, name: "C Blok Asansörü", type: "elevator", color: "#E2E8F0", r: 11, s: "#3B82F6" },
-        "K3_AsansorB":  { x: 500, y: 550, f: 3, name: "B Blok Asansörü", type: "elevator", color: "#E2E8F0", r: 11, s: "#3B82F6" },
-        "K3_Ofis1":     { x: 500, y: 150, f: 3, name: "Rektörlük", type: "academic", color: "#A855F7", r: 8 },
-        "K3_Ofis2":     { x: 300, y: 400, f: 3, name: "A Blok Ofisleri", type: "academic", color: "#A855F7", r: 8 },
-        "K3_Ofis3":     { x: 700, y: 400, f: 3, name: "C Blok Ofisleri", type: "academic", color: "#A855F7", r: 8 },
-        "K3_Ofis4":     { x: 250, y: 600, f: 3, name: "Dekanlık", type: "academic", color: "#A855F7", r: 8 },
-        "K3_Ofis5":     { x: 750, y: 600, f: 3, name: "Toplantı Salonu", type: "academic", color: "#A855F7", r: 8 }
+        // --- 3. KAT (HOCALAR KAT) ---
+        "K3_Merkez":    { x: 500, y: 420, f: 3, name: "Merkez İdari Alan", type: "academic" },
+        "K3_AsansorA":  { x: 380, y: 370, f: 3, name: "A Blok Asansörü", type: "elevator" },
+        "K3_AsansorC":  { x: 620, y: 370, f: 3, name: "C Blok Asansörü", type: "elevator" },
+        "K3_AsansorB":  { x: 500, y: 550, f: 3, name: "B Blok Asansörü", type: "elevator" },
+        "K3_Ofis1":     { x: 500, y: 150, f: 3, name: "Rektörlük", type: "academic" },
+        "K3_Ofis2":     { x: 300, y: 400, f: 3, name: "A Blok Ofisleri", type: "academic" },
+        "K3_Ofis3":     { x: 700, y: 400, f: 3, name: "C Blok Ofisleri", type: "academic" },
+        "K3_Ofis4":     { x: 250, y: 600, f: 3, name: "Dekanlık", type: "academic" },
+        "K3_Ofis5":     { x: 750, y: 600, f: 3, name: "Toplantı Salonu", type: "academic" }
     },
     graph: {}
 };
@@ -240,7 +227,7 @@ const DB = {
 // ============================================================================
 for (let id in DB.nodes) { DB.graph[id] = {}; }
 
-// DİKEY (ASANSÖRLER)
+// --- DİKEY BAĞLANTILAR (ASANSÖRLER) ---
 DB.graph["Z_GirisA"]["K1_AsansorA"] = 30; DB.graph["K1_AsansorA"]["Z_GirisA"] = 30;
 DB.graph["K1_AsansorA"]["K2_AsansorA"] = 30; DB.graph["K2_AsansorA"]["K1_AsansorA"] = 30;
 DB.graph["K2_AsansorA"]["K3_AsansorA"] = 30; DB.graph["K3_AsansorA"]["K2_AsansorA"] = 30;
@@ -253,7 +240,7 @@ DB.graph["Z_GirisC"]["K1_AsansorC"] = 30; DB.graph["K1_AsansorC"]["Z_GirisC"] = 
 DB.graph["K1_AsansorC"]["K2_AsansorC"] = 30; DB.graph["K2_AsansorC"]["K1_AsansorC"] = 30;
 DB.graph["K2_AsansorC"]["K3_AsansorC"] = 30; DB.graph["K3_AsansorC"]["K2_AsansorC"] = 30;
 
-// YATAY - ZEMİN
+// --- YATAY BAĞLANTILAR: ZEMİN KAT ---
 DB.graph["Z_Merkez"]["Z_GirisA"] = 15; DB.graph["Z_GirisA"]["Z_Merkez"] = 15;
 DB.graph["Z_Merkez"]["Z_GirisB"] = 15; DB.graph["Z_GirisB"]["Z_Merkez"] = 15;
 DB.graph["Z_Merkez"]["Z_GirisC"] = 15; DB.graph["Z_GirisC"]["Z_Merkez"] = 15;
@@ -262,7 +249,7 @@ DB.graph["Z_GirisC"]["Z_Amfi2"] = 15; DB.graph["Z_Amfi2"]["Z_GirisC"] = 15;
 DB.graph["Z_GirisB"]["Z_Amfi1"] = 25; DB.graph["Z_Amfi1"]["Z_GirisB"] = 25;
 DB.graph["Z_GirisB"]["Z_Amfi2"] = 25; DB.graph["Z_Amfi2"]["Z_GirisB"] = 25;
 
-// YATAY - 1. KAT
+// --- YATAY BAĞLANTILAR: 1. KAT (NEO COFFEE) ---
 DB.graph["K1_Merkez"]["K1_AsansorA"] = 15; DB.graph["K1_AsansorA"]["K1_Merkez"] = 15;
 DB.graph["K1_Merkez"]["K1_AsansorB"] = 15; DB.graph["K1_AsansorB"]["K1_Merkez"] = 15;
 DB.graph["K1_Merkez"]["K1_AsansorC"] = 15; DB.graph["K1_AsansorC"]["K1_Merkez"] = 15;
@@ -275,7 +262,7 @@ DB.graph["K1_AsansorB"]["K1_Lab2"] = 25; DB.graph["K1_Lab2"]["K1_AsansorB"] = 25
 DB.graph["K1_Derslik2"]["K1_Lab1"] = 20; DB.graph["K1_Lab1"]["K1_Derslik2"] = 20;
 DB.graph["K1_Derslik3"]["K1_Lab2"] = 20; DB.graph["K1_Lab2"]["K1_Derslik3"] = 20;
 
-// YATAY - 2. KAT
+// --- YATAY BAĞLANTILAR: 2. KAT (NEO MUTFAK) ---
 DB.graph["K2_Merkez"]["K2_AsansorA"] = 15; DB.graph["K2_AsansorA"]["K2_Merkez"] = 15;
 DB.graph["K2_Merkez"]["K2_AsansorB"] = 15; DB.graph["K2_AsansorB"]["K2_Merkez"] = 15;
 DB.graph["K2_Merkez"]["K2_AsansorC"] = 15; DB.graph["K2_AsansorC"]["K2_Merkez"] = 15;
@@ -288,7 +275,7 @@ DB.graph["K2_AsansorB"]["K2_Lab2"] = 25; DB.graph["K2_Lab2"]["K2_AsansorB"] = 25
 DB.graph["K2_Derslik2"]["K2_Lab1"] = 20; DB.graph["K2_Lab1"]["K2_Derslik2"] = 20;
 DB.graph["K2_Derslik3"]["K2_Lab2"] = 20; DB.graph["K2_Lab2"]["K2_Derslik3"] = 20;
 
-// YATAY - 3. KAT
+// --- YATAY BAĞLANTILAR: 3. KAT (İDARİ / HOCALAR) ---
 DB.graph["K3_Merkez"]["K3_AsansorA"] = 15; DB.graph["K3_AsansorA"]["K3_Merkez"] = 15;
 DB.graph["K3_Merkez"]["K3_AsansorB"] = 15; DB.graph["K3_AsansorB"]["K3_Merkez"] = 15;
 DB.graph["K3_Merkez"]["K3_AsansorC"] = 15; DB.graph["K3_AsansorC"]["K3_Merkez"] = 15;
@@ -301,9 +288,8 @@ DB.graph["K3_AsansorB"]["K3_Ofis5"] = 25; DB.graph["K3_Ofis5"]["K3_AsansorB"] = 
 DB.graph["K3_Ofis2"]["K3_Ofis4"] = 20; DB.graph["K3_Ofis4"]["K3_Ofis2"] = 20;
 DB.graph["K3_Ofis3"]["K3_Ofis5"] = 20; DB.graph["K3_Ofis5"]["K3_Ofis3"] = 20;
 
-
 // ============================================================================
-// 3. MOTOR & ARAYÜZ (Saf SVG İle Sıfır Kayma)
+// 3. MOTOR & ARAYÜZ
 // ============================================================================
 class NavEngine {
     constructor(d) { this.n=d.nodes; this.g=d.graph; this.f=0; this.p=[]; this.s=false; }
@@ -317,55 +303,39 @@ class NavEngine {
         }
         let p=[], cur=e; while(cur){p.unshift(cur); cur=prev[cur];} return p[0]===s?p:[];
     }
-    getStats(p) {
-        if(p.length < 2) return { d: 0, t: 0 };
-        let px = 0, fl = 0;
-        for(let i=0; i<p.length-1; i++){
-            let n1 = this.n[p[i]], n2 = this.n[p[i+1]];
-            if(n1.f !== n2.f) fl++; else px += Math.sqrt(Math.pow(n2.x - n1.x, 2) + Math.pow(n2.y - n1.y, 2));
-        }
-        let m = Math.round(px * 0.15); // Ortalama px -> metre dönüşümü
-        return { d: m, t: Math.round(m / 1.4) + (fl * 15) };
-    }
 }
 
 class UIController {
     constructor(e) { this.e=e; this.init(); }
     init() {
-        let g={0:"",1:"",2:"",3:""};
-        for(let[id,n] of Object.entries(this.e.n)) g[n.f]+=`<option value="${id}">${n.name}</option>`;
-        const h=`<option disabled selected>Konum Seçin</option><optgroup label="Zemin Kat">${g[0]}</optgroup><optgroup label="1. Kat">${g[1]}</optgroup><optgroup label="2. Kat">${g[2]}</optgroup><optgroup label="3. Kat">${g[3]}</optgroup>`;
-        document.getElementById('select-start').innerHTML=h; document.getElementById('select-end').innerHTML=h;
+        let listHTML = "";
+        for(let [id, n] of Object.entries(this.e.n)) {
+            listHTML += `<option value="${n.name}"></option>`;
+        }
+        document.getElementById('locations-list').innerHTML = listHTML;
+
         document.querySelectorAll('.floor-tabs button').forEach(b=>b.onclick=(ev)=>this.cf(parseInt(ev.target.dataset.floor)));
         document.getElementById('btn-calc').onclick=()=>this.calc(); document.getElementById('btn-sim').onclick=()=>this.sim();
         this.cf(0);
     }
 
-    cf(f) {
-        if(this.e.s) return; this.e.f=f;
+    cf(f, bypassSimCheck = false) {
+        if(this.e.s && !bypassSimCheck) return; // Simülasyon açıkken kullanıcının kat değiştirmesini engeller
+        this.e.f=f;
         document.querySelectorAll('.floor-tabs button').forEach(b=>b.classList.remove('active'));
         document.querySelector(`.floor-tabs button[data-floor="${f}"]`).classList.add('active');
         
-        const gNodes = document.getElementById('nodes-group');
-        gNodes.innerHTML = '';
-        
+        const c=document.getElementById('nodes-layer'); c.innerHTML='';
         for(let[id,n] of Object.entries(this.e.n)){
             if(n.f===f){
-                // Noktaları SVG Circle olarak ekle
-                let strokeC = n.s ? n.s : "rgba(2,6,23,1)";
-                let sWidth = n.s ? 3 : 2;
-                gNodes.innerHTML += `
-                    <circle class="svg-node" cx="${n.x}" cy="${n.y}" r="${n.r}" fill="${n.color}" stroke="${strokeC}" stroke-width="${sWidth}" onclick="document.getElementById('select-end').value='${id}'" />
-                    <rect class="svg-label-bg" x="${n.x - (n.name.length * 4)}" y="${n.y + 15}" width="${n.name.length * 8}" height="22" />
-                    <text class="svg-label-text" x="${n.x}" y="${n.y + 30}">${n.name}</text>
-                `;
+                c.innerHTML+=`<div class="node ${n.type||''}" style="left:${n.x}px; top:${n.y}px;" onclick="document.getElementById('select-end').value='${n.name}'"></div><div class="node-label" style="left:${n.x}px; top:${n.y}px;">${n.name}</div>`;
             }
         }
         this.rp();
     }
     
     rp() {
-        const svg = document.getElementById('routes-group'); svg.innerHTML='';
+        const svg=document.getElementById('routes-layer'); svg.innerHTML='';
         for(let i=0; i<this.e.p.length-1; i++){
             let n1=this.e.n[this.e.p[i]], n2=this.e.n[this.e.p[i+1]];
             if(n1.f===this.e.f && n2.f===this.e.f) {
@@ -375,49 +345,39 @@ class UIController {
     }
     
     calc() {
-        const s=document.getElementById('select-start').value, e=document.getElementById('select-end').value;
-        if(!s||!e) return; this.e.p=this.e.findPath(s,e); this.cf(this.e.n[s].f);
+        const startName = document.getElementById('select-start').value;
+        const endName = document.getElementById('select-end').value;
+        
+        const s = Object.keys(this.e.n).find(key => this.e.n[key].name === startName);
+        const e = Object.keys(this.e.n).find(key => this.e.n[key].name === endName);
+        
+        if(!s || !e) {
+            document.getElementById('instructions').innerHTML = '<p style="color:var(--secondary)">Lütfen arama çubuğundan geçerli bir konum seçin.</p>';
+            return;
+        }
+
+        this.e.p=this.e.findPath(s,e); this.cf(this.e.n[s].f);
         let h=""; for(let i=0; i<this.e.p.length-1; i++){
             let n1=this.e.n[this.e.p[i]], n2=this.e.n[this.e.p[i+1]];
             if(n1.f!==n2.f) h+=`<p style="color:var(--secondary); font-weight:bold;">🏢 Asansör ile ${n2.f}. kata geçin.</p>`; else h+=`<p>• <b>${n2.name}</b> yönüne gidin.</p>`;
         }
-        document.getElementById('instructions').innerHTML=h; 
-        document.getElementById('btn-sim').style.display='block';
-
-        // Meta bilgileri güncelle
-        let stats = this.e.getStats(this.e.p);
-        document.getElementById('meta-dist').innerText = stats.d + "m";
-        document.getElementById('meta-time').innerText = stats.t > 60 ? `${Math.floor(stats.t/60)}dk ${stats.t%60}sn` : `${stats.t}sn`;
+        document.getElementById('instructions').innerHTML=h; document.getElementById('btn-sim').style.display='block';
     }
     
     async sim() {
         if(this.e.s || this.e.p.length===0) return; this.e.s=true;
-        const avG = document.getElementById('avatar-group');
-        const avBg = document.getElementById('avatar-bg');
-        const avText = document.getElementById('avatar-text');
-        const overlay = document.getElementById('sim-overlay'); 
-        
-        avG.style.display = 'block';
-        overlay.classList.add('active');
-        
+        const av=document.getElementById('avatar'); av.style.display='block';
         for(let i=0; i<this.e.p.length; i++){
             let n=this.e.n[this.e.p[i]];
             if(n.f!==this.e.f) { 
-                avText.innerHTML="↕️"; 
-                overlay.innerHTML = `<div class="sim-spinner"></div> <span>${n.f}. Kata Çıkılıyor...</span>`;
-                await new Promise(r=>setTimeout(r,1500)); 
-                this.cf(n.f); 
-                avText.innerHTML="🚶"; 
-                overlay.innerHTML = `<div class="sim-spinner"></div> <span>KGTÜ NAV Yönlendiriyor...</span>`;
+                av.innerHTML="↕️"; 
+                await new Promise(r=>setTimeout(r,1000)); 
+                this.cf(n.f, true); // Simülasyon bayrağı ile kat geçişini zorla yapar
+                av.innerHTML="🚶"; 
             }
-            
-            // Transform ile SVG içi animasyon (Kayma yapmaz)
-            avG.setAttribute("transform", `translate(${n.x}, ${n.y})`);
-            await new Promise(r=>setTimeout(r,800));
+            av.style.left=`${n.x}px`; av.style.top=`${n.y}px`; await new Promise(r=>setTimeout(r,800));
         }
-        avText.innerHTML="📍"; 
-        overlay.innerHTML = `<span>✅ Hedefe Ulaşıldı</span>`;
-        setTimeout(()=>{avG.style.display='none'; overlay.classList.remove('active'); this.e.s=false;},2000);
+        av.innerHTML="📍"; setTimeout(()=>{av.style.display='none'; this.e.s=false;},1500);
     }
 }
 window.onload = () => new UIController(new NavEngine(DB));
